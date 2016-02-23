@@ -6,7 +6,9 @@ public class WSPathParam {
     public static final String PRISMA_ZONE_ID = "prismaZoneId";
     public static final String DNS_ZONE_ID = "dnsZoneId";
     public static final String IAAS_ZONE_ID = "iaasZoneId";
-    public static final String RES_ID = "resId";
+    public static final String RES_ID = "resId";    
+    public static final String APP_ID = "appId";
+    public static final String APP_ENV_ID = "envId";
 
     public static final String APPAAS = "appaas";
     public static final String BIAAS = "biaas";
@@ -16,6 +18,7 @@ public class WSPathParam {
     public static final String VMAAS = "vmaas";
     public static final String BPMAAS = "bpmaas";
     public static final String ODAAS = "odaas";
+    public static final String APP_ENVIRONMENT = "environments";
 
     public static final String SERVICE_BASE = "/workgroups/{" + WORKGROUP_ID + "}/zones/{" + PRISMA_ZONE_ID + "}";
 
@@ -38,4 +41,7 @@ public class WSPathParam {
     public static final String SERVICE_DNSAAS = SERVICE_BASE + "/paas/dnsaas";
 
     public static final String NAME_AVAILABLE = "/name/available";
+    
+    public static final String APPaaSEnvAppSrcFile_REST_URL = WSPathParam.SERVICE_APPAAS
+			+ "/{"+APP_ID+"}/"+APP_ENVIRONMENT+"/{"+APP_ENV_ID+"}/appsrcfile";
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<style>
+		body {
+			font-family: Georgia, Times New Roman, Times, serif;
+		}
+	</style>
+</head>
+<body>
+	<h1><strong>${fullName}</strong> richiede l'abilitazione per il suo nuovo account</h1>
+	<p>
+		Per attivare l'account &egrave; sufficiente cliccare sul pulsante di abilitazione presente
+		al link di amministrazione sottostante:<br />
+		<br />
+		<a href="${confirmationRequestURI}">${confirmationRequestURI}</a>
+	</p>
+	<p>
+		Qualora si riscontrassero problemi con il collegamento sopra
+		riportato, &egrave; possibile completare l'operazione navigando manualmente
+		alla pagina di amministrazione utenti e cercare l'utente con i seguenti dati:
+		<ul>
+			<li>Email: <strong>${email}</strong></li>
+			<li>Username: <strong>${fullName}</strong></li>
+			<li>Id: <strong>${userId}</strong></li>
+		</ul>
+	</p>
+	<p>
+		Nel caso in cui non si riuscisse a completare l'operazione o si
+		riscontrassero problemi tecnici, si prega di contattare l'assistenza
+		all'indirizzo: <a href="mailto:${support}">${support}</a>.
+	</p>
+	<p>
+		Cordiali saluti e buona navigazione.
+	</p>
+</body>
+</html>

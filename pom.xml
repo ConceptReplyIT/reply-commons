@@ -120,6 +120,14 @@
 	</dependencies>
 
 	<build>
-		<finalName>reply-commons</finalName>
+		<finalName>${project.artifactId}-${project.version}-r${build.suffix}</finalName>
+
+		<plugins>
+			<!-- Set properties containing the scm revision -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</build>
 </project>

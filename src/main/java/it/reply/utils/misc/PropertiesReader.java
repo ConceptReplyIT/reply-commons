@@ -22,11 +22,11 @@ public class PropertiesReader {
 	 *             if cannot access the file.
 	 */
 	public static Properties read(String path) throws IOException {
-		InputStream inputStream = PropertiesReader.class.getClassLoader()
-				.getResourceAsStream(path);
-		Properties properties = new Properties();
-		properties.load(inputStream);
-
+	  Properties properties = new Properties();
+	  try (InputStream inputStream = PropertiesReader.class.getClassLoader()
+				.getResourceAsStream(path)) {
+  		properties.load(inputStream);
+	  }
 		if (LOG.isDebugEnabled())
 			for (Entry<Object, Object> item : properties.entrySet()) {
 				LOG.debug("[" + path + "] " + item.getKey() + " = "

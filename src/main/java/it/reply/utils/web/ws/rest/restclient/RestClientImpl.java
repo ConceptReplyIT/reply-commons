@@ -210,76 +210,76 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 				// }
 			}
 		}
-
-		ResteasyClient client = cb.build();
-
-		Response response = null;
+		ResteasyClient client = null;
 		try {
-			ResteasyWebTarget target = client.target(URL);
-
-			// Add Query Params
-			if (queryParams != null)
-				target = target.queryParams(queryParams);
-
-			Builder reqBuilder = target.request();
-
-			if (headers != null) {
-				reqBuilder = reqBuilder.headers(headers);
-			}
-
-			switch (method) {
-			case GET:
-				if (body == null)
-					response = reqBuilder.get();
-				else
-					response = reqBuilder.method("GET", Entity.entity(body, bodyMediaType));
-				break;
-			case HEAD:
-				if (body == null)
-					response = reqBuilder.head();
-				else
-					response = reqBuilder.method("HEAD", Entity.entity(body, bodyMediaType));
-				break;
-			case POST:
-				if (body == null) {
-					response = reqBuilder.method("POST");
-				} else
-					response = reqBuilder.post(Entity.entity(body, bodyMediaType));
-				break;
-			case PUT:
-				if (body == null) {
-					response = reqBuilder.method("PUT");
-				} else {
-					response = reqBuilder.put(Entity.entity(body, bodyMediaType));
-				}
-				break;
-			case DELETE:
-				if (body == null)
-					response = reqBuilder.delete();
-				else
-					response = reqBuilder.method("DELETE", Entity.entity(body, bodyMediaType));
-				break;
-			}
-
-			RestMessage msg;
-			try {
-				msg = new RestMessage(response.getHeaders(), response.readEntity(entityClass), response.getStatus());
-			} catch (Exception e) {
-				msg = new RestMessage(response.getHeaders(), null, response.getStatus());
-			}
-
-			return msg;
-
-		} catch (Exception e) {
-			throw new RestClientException(e.getMessage(), e);
+		  client = cb.build();
+  		Response response = null;
+  		try {
+  			ResteasyWebTarget target = client.target(URL);
+  
+  			// Add Query Params
+  			if (queryParams != null)
+  				target = target.queryParams(queryParams);
+  
+  			Builder reqBuilder = target.request();
+  
+  			if (headers != null) {
+  				reqBuilder = reqBuilder.headers(headers);
+  			}
+  
+  			switch (method) {
+  			case GET:
+  				if (body == null)
+  					response = reqBuilder.get();
+  				else
+  					response = reqBuilder.method("GET", Entity.entity(body, bodyMediaType));
+  				break;
+  			case HEAD:
+  				if (body == null)
+  					response = reqBuilder.head();
+  				else
+  					response = reqBuilder.method("HEAD", Entity.entity(body, bodyMediaType));
+  				break;
+  			case POST:
+  				if (body == null) {
+  					response = reqBuilder.method("POST");
+  				} else
+  					response = reqBuilder.post(Entity.entity(body, bodyMediaType));
+  				break;
+  			case PUT:
+  				if (body == null) {
+  					response = reqBuilder.method("PUT");
+  				} else {
+  					response = reqBuilder.put(Entity.entity(body, bodyMediaType));
+  				}
+  				break;
+  			case DELETE:
+  				if (body == null)
+  					response = reqBuilder.delete();
+  				else
+  					response = reqBuilder.method("DELETE", Entity.entity(body, bodyMediaType));
+  				break;
+  			}
+  
+  			RestMessage msg;
+  			try {
+  				msg = new RestMessage(response.getHeaders(), response.readEntity(entityClass), response.getStatus());
+  			} catch (Exception e) {
+  				msg = new RestMessage(response.getHeaders(), null, response.getStatus());
+  			}
+  
+  			return msg;
+  
+  		} catch (Exception e) {
+  			throw new RestClientException(e.getMessage(), e);
+  		} finally {
+  			if (response != null)
+  				response.close();
+  		}
 		} finally {
-			if (response != null)
-				response.close();
-			if (client != null)
-				client.close();
+      if (client != null && !client.isClosed())
+        client.close();
 		}
-
-		// return null;
 	}
 
 }

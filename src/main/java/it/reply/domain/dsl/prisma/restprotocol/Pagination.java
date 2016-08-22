@@ -6,6 +6,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,9 +16,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "limit", "offset", "totalCount", "links" })
-public class Pagination {
+public class Pagination implements Serializable {
 
-	@JsonProperty("limit")
+  private static final long serialVersionUID = 4136560380272841676L;
+  
+  @JsonProperty("limit")
 	private Long limit;
 	@JsonProperty("offset")
 	private Long offset;

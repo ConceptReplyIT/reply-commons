@@ -2,6 +2,8 @@ package it.reply.utils.web.ws.rest.apiencoding;
 
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.google.common.base.MoreObjects;
+
 import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 
 /**
@@ -55,8 +57,10 @@ public class RestMessage {
 
 	@Override
 	public String toString() {
-		return "RestMessage [headers=" + headers + ", body=" + body
-				+ ", httpStatusCode=" + httpStatusCode + "]";
+	  return MoreObjects.toStringHelper(this)
+	  .add("headers", headers)
+	  .add("body", body)
+	  .add("httpStatusCode", httpStatusCode).toString();
 	}
 	
 }

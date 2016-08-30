@@ -80,7 +80,13 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
 		</dependency>
-
+		
+		<!-- Google Guava -->
+		<dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+		</dependency>
+		
 		<!-- Mailer dependencies -->
 		<dependency>
 			<groupId>org.apache.velocity</groupId>

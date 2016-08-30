@@ -2,18 +2,19 @@ package it.reply.utils.web.ws.rest.restclient;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import it.reply.utils.web.ws.rest.apiencoding.MappingException;
 import it.reply.utils.web.ws.rest.apiencoding.NoMappingModelFoundException;
@@ -210,16 +211,23 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 				// }
 			}
 		}
-		ResteasyClient client = null;
+		Client client = null;
 		try {
 		  client = cb.build();
   		Response response = null;
   		try {
-  			ResteasyWebTarget target = client.target(URL);
+  			WebTarget target = client.target(URL);
   
   			// Add Query Params
-  			if (queryParams != null)
-  				target = target.queryParams(queryParams);
+  			if (queryParams != null) {
+  			  for (MultivaluedMap.Entry<String, List<Object>> entry : queryParams.entrySet()) {
+  			    Object[] params = null;
+  			    if (entry.getValue() != null) {
+  			      params = entry.getValue().toArray();
+  			    }
+  			    target.queryParam(entry.getKey(), params);
+  			  }
+  			}
   
   			Builder reqBuilder = target.request();
   
@@ -277,8 +285,9 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
   				response.close();
   		}
 		} finally {
-      if (client != null && !client.isClosed())
+      if (client != null) {
         client.close();
+      }
 		}
 	}
 

@@ -1,4 +1,4 @@
-package it.reply.domain.dsl.prisma;
+package it.reply.domain.dsl.info;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "projectVersion", "serverHostname" })
-public class DebugInformations {
+public class DebugInformation {
 
 	@JsonProperty("projectVersion")
 	private String projectVersion;

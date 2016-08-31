@@ -175,49 +175,6 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 
 	/**
 	 * Executes a Restful HEAD Request to the given URL, with the given headers
-	 * and body (with the given media type) and <b>tries to decode the JSON
-	 * result with the given {@link RestResponseDecoder} and/or
-	 * {@link RestResponseDecodeStrategy}</b>.
-	 * 
-	 * @param URL
-	 * @param headers
-	 * @param rrd
-	 *            A Rest Result Decoder.
-	 * @param strategy
-	 *            Can be null if the decoder's default strategy has to be used.
-	 * @param reqOptions
-	 *            Request options like timeout, proxy, etc.
-	 * @return The Rest result decoded (of the type passed to the class).
-	 * @throws RestClientException
-	 *             if a problem with the request has occurred (not an error of
-	 *             the remote application, just for the HTTP request).
-	 * @throws NoMappingModelFoundException
-	 *             {@link NoMappingModelFoundException}
-	 * @throws ServerErrorResponseException
-	 *             if the server responded with a custom error not using the
-	 *             application protocol (ie. 404)
-	 */
-	public RestResponseResultType headRequest(String URL,
-			MultivaluedMap<String, Object> headers, RequestOptions reqOptions,
-			RestResponseDecoder<RestResponseResultType> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
-			NoMappingModelFoundException, MappingException,
-			ServerErrorResponseException;
-
-	/**
-	 * See
-	 * {@link RestClient#headRequest(String, MultivaluedMap, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
-	 * . Without RequestOptions param.
-	 */
-	public RestResponseResultType headRequest(String URL,
-			MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<RestResponseResultType> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
-			NoMappingModelFoundException, MappingException,
-			ServerErrorResponseException;
-
-	/**
-	 * Executes a Restful HEAD Request to the given URL, with the given headers
 	 * and body (with the given media type) and returns the response in a
 	 * {@link RestMessage}.
 	 * 
@@ -438,9 +395,9 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public <E> RestResponseResultType deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, RequestOptions reqOptions,
+	public RestResponseResultType deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers,
+			RequestOptions reqOptions,
 			RestResponseDecoder<RestResponseResultType> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -451,9 +408,8 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 * {@link RestClient#deleteRequest(String, MultivaluedMap, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * . Without RequestOptions param.
 	 */
-	public <E> RestResponseResultType deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType,
+	public RestResponseResultType deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers,
 			RestResponseDecoder<RestResponseResultType> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -473,9 +429,8 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 *             if a problem with the request has occurred (not an error of
 	 *             the remote application, just for the HTTP request).
 	 */
-	public <E> RestMessage deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, RequestOptions reqOptions)
+	public RestMessage deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers, RequestOptions reqOptions)
 			throws RestClientException;
 
 	/**
@@ -483,9 +438,8 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 * {@link RestClient#deleteRequest(String, MultivaluedMap, RequestOptions)}.
 	 * Without RequestOptions param.
 	 */
-	public <E> RestMessage deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType) throws RestClientException;
+	public RestMessage deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers) throws RestClientException;
 	
 	/*	GENERIC REQUESTS */
 	

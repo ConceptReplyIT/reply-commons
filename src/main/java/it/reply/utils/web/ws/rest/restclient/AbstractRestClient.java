@@ -49,15 +49,6 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	/***************************** HEAD Requests ******************************/
 
 	@Override
-	public T headRequest(String URL, MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
-			throws RestClientException, NoMappingModelFoundException,
-			MappingException, ServerErrorResponseException {
-
-		return headRequest(URL, headers, null, rrd, strategy);
-	}
-
-	@Override
 	public RestMessage headRequest(String URL,
 			MultivaluedMap<String, Object> headers) throws RestClientException {
 
@@ -111,23 +102,21 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	/***************************** DELETE Requests ******************************/
 
 	@Override
-	public <E> T deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, RestResponseDecoder<T> rrd,
+	public T deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers, RestResponseDecoder<T> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
 
-		return deleteRequest(URL, headers, body, bodyMediaType, null, rrd,
+		return deleteRequest(URL, headers, null, rrd,
 				strategy);
 	}
 
 	@Override
-	public <E> RestMessage deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType) throws RestClientException {
+	public RestMessage deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers) throws RestClientException {
 
-		return deleteRequest(URL, headers, body, bodyMediaType, null);
+		return deleteRequest(URL, headers, null);
 	}
 
 }

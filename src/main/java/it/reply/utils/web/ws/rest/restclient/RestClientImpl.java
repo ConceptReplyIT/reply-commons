@@ -50,17 +50,6 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 	/***************************** HEAD Requests ******************************/
 
 	@Override
-	public T headRequest(String URL, MultivaluedMap<String, Object> headers,
-			it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions, RestResponseDecoder<T> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException,
-			MappingException, ServerErrorResponseException {
-
-		RestMessage msg = doRequest(RestMethod.HEAD, URL, headers, null, null, null, reqOptions);
-
-		return rrd.decode(msg, strategy);
-	}
-
-	@Override
 	public RestMessage headRequest(String URL, MultivaluedMap<String, Object> headers,
 			it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions) throws RestClientException {
 
@@ -111,22 +100,20 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 	/***************************** DELETE Requests ******************************/
 
 	@Override
-	public <E> T deleteRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
+	public T deleteRequest(String URL, MultivaluedMap<String, Object> headers, RequestOptions reqOptions,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
 
-		RestMessage msg = doRequest(RestMethod.DELETE, URL, headers, null, body, bodyMediaType, reqOptions);
+		RestMessage msg = doRequest(RestMethod.DELETE, URL, headers, null, null, null, reqOptions);
 
 		return rrd.decode(msg, strategy);
 	}
 
 	@Override
-	public <E> RestMessage deleteRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions)
-			throws RestClientException {
+	public RestMessage deleteRequest(String URL, MultivaluedMap<String, Object> headers, 
+	    RequestOptions reqOptions) throws RestClientException {
 
-		return doRequest(RestMethod.DELETE, URL, headers, null, body, bodyMediaType, reqOptions);
+		return doRequest(RestMethod.DELETE, URL, headers, null, null, null, reqOptions);
 	}
 
 	/***************************** Generic Requests ******************************/

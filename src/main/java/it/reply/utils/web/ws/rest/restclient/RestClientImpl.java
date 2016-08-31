@@ -25,12 +25,12 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
-public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRestClient<T> {
+public class RestClientImpl extends AbstractRestClient {
 
 	/***************************** GET Requests ******************************/
 
 	@Override
-	public T getRequest(String URL, MultivaluedMap<String, Object> headers,
+	public <T extends BaseRestResponseResult> T getRequest(String URL, MultivaluedMap<String, Object> headers,
 			it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions, RestResponseDecoder<T> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
@@ -59,7 +59,7 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 	/***************************** POST Requests ******************************/
 
 	@Override
-	public <E> T postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T extends BaseRestResponseResult, E> T postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
@@ -80,7 +80,7 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 	/***************************** PUT Requests ******************************/
 
 	@Override
-	public <E> T putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T extends BaseRestResponseResult, E> T putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
@@ -100,7 +100,7 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 	/***************************** DELETE Requests ******************************/
 
 	@Override
-	public T deleteRequest(String URL, MultivaluedMap<String, Object> headers, RequestOptions reqOptions,
+	public <T extends BaseRestResponseResult> T deleteRequest(String URL, MultivaluedMap<String, Object> headers, RequestOptions reqOptions,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
 
@@ -119,7 +119,7 @@ public class RestClientImpl<T extends BaseRestResponseResult> extends AbstractRe
 	/***************************** Generic Requests ******************************/
 
 	@Override
-	public <E> T doRequest(it.reply.utils.web.ws.rest.restclient.RestClient.RestMethod method, String URL,
+	public <T extends BaseRestResponseResult, E> T doRequest(it.reply.utils.web.ws.rest.restclient.RestClient.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<E> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,

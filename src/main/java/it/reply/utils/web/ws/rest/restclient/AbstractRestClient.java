@@ -13,8 +13,8 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
-public abstract class AbstractRestClient<T extends BaseRestResponseResult>
-		implements RestClient<T> {
+public abstract class AbstractRestClient
+		implements RestClient {
 
 	protected int defaultTimeout = 60000; // in ms
 
@@ -31,7 +31,7 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	/***************************** GET Requests ******************************/
 
 	@Override
-	public T getRequest(String URL, MultivaluedMap<String, Object> headers,
+	public <T extends BaseRestResponseResult> T getRequest(String URL, MultivaluedMap<String, Object> headers,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
@@ -58,7 +58,7 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	/***************************** POST Requests ******************************/
 
 	@Override
-	public <E> T postRequest(String URL,
+	public <T extends BaseRestResponseResult, E> T postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType, RestResponseDecoder<T> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
@@ -81,7 +81,7 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	/***************************** PUT Requests ******************************/
 
 	@Override
-	public <E> T putRequest(String URL, MultivaluedMap<String, Object> headers,
+	public <T extends BaseRestResponseResult, E> T putRequest(String URL, MultivaluedMap<String, Object> headers,
 			GenericEntity<E> body, MediaType bodyMediaType,
 			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
@@ -102,7 +102,7 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	/***************************** DELETE Requests ******************************/
 
 	@Override
-	public T deleteRequest(String URL,
+	public <T extends BaseRestResponseResult> T deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers, RestResponseDecoder<T> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,

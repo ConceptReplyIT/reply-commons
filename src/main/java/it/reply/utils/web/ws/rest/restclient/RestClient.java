@@ -22,7 +22,7 @@ import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
  * 
  * @param <T>
  */
-public interface RestClient<RestResponseResultType extends BaseRestResponseResult> {
+public interface RestClient {
 
 	public enum RestMethod {
 		GET, POST, PUT, DELETE, HEAD;
@@ -127,7 +127,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public RestResponseResultType getRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult> RestResponseResultType getRequest(String URL,
 			MultivaluedMap<String, Object> headers, RequestOptions reqOptions,
 			RestResponseDecoder<RestResponseResultType> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
@@ -139,7 +139,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 * {@link RestClient#getRequest(String, MultivaluedMap, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy )}
 	 * . Without RequestOptions param.
 	 */
-	public RestResponseResultType getRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult> RestResponseResultType getRequest(String URL,
 			MultivaluedMap<String, Object> headers,
 			RestResponseDecoder<RestResponseResultType> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
@@ -230,7 +230,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 *             if the server responded with a custom error not using the
 	 *             application protocolo (ie. 404)
 	 */
-	public <E> RestResponseResultType postRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult, E> RestResponseResultType postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType, RequestOptions reqOptions,
 			RestResponseDecoder<RestResponseResultType> rrd,
@@ -243,7 +243,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 * {@link RestClient#postRequest(String, MultivaluedMap, GenericEntity, MediaType, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * Without RequestOptions param.
 	 */
-	public <E> RestResponseResultType postRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult, E> RestResponseResultType postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType,
 			RestResponseDecoder<RestResponseResultType> rrd,
@@ -315,7 +315,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public <E> RestResponseResultType putRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult, E> RestResponseResultType putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType, RequestOptions reqOptions,
 			RestResponseDecoder<RestResponseResultType> rrd,
@@ -328,7 +328,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 * {@link RestClient#putRequest(String, MultivaluedMap, GenericEntity, MediaType, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * . Without RequestOptions param.
 	 */
-	public <E> RestResponseResultType putRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult, E> RestResponseResultType putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType,
 			RestResponseDecoder<RestResponseResultType> rrd,
@@ -395,7 +395,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public RestResponseResultType deleteRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult> RestResponseResultType deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers,
 			RequestOptions reqOptions,
 			RestResponseDecoder<RestResponseResultType> rrd,
@@ -408,7 +408,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	 * {@link RestClient#deleteRequest(String, MultivaluedMap, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * . Without RequestOptions param.
 	 */
-	public RestResponseResultType deleteRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult> RestResponseResultType deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers,
 			RestResponseDecoder<RestResponseResultType> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
@@ -446,7 +446,7 @@ public interface RestClient<RestResponseResultType extends BaseRestResponseResul
 	/**
 	 * 	
 	 */
-	public <E> RestResponseResultType doRequest(RestMethod method, String URL,
+	public <RestResponseResultType extends BaseRestResponseResult, E> RestResponseResultType doRequest(RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<E> body,
 			MediaType bodyMediaType,

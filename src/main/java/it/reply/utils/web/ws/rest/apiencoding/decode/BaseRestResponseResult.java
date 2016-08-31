@@ -12,7 +12,7 @@ import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
  * @author l.biava
  *
  */
-public class BaseRestResponseResult {
+public class BaseRestResponseResult<U> {
 //	public enum StatusType {
 //		OK, ERROR
 //	}
@@ -20,10 +20,10 @@ public class BaseRestResponseResult {
 	private StatusType status;
 	private Object result;
 	private JavaType resultClass;
-	private RestMessage originalRestMessage;
+	private RestMessage<U> originalRestMessage;
 
 	public BaseRestResponseResult(StatusType status, Object result,
-			JavaType resultClass, RestMessage originalRestMessage) {
+			JavaType resultClass, RestMessage<U> originalRestMessage) {
 		super();
 		this.status = status;
 		this.result = result;
@@ -39,7 +39,7 @@ public class BaseRestResponseResult {
 //		this.resultClass = resultClass;
 //	}
 
-	public RestMessage getOriginalRestMessage() {
+	public RestMessage<U> getOriginalRestMessage() {
 		return originalRestMessage;
 	}
 

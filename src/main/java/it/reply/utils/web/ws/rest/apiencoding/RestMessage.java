@@ -11,10 +11,10 @@ import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
  * @author l.biava
  *
  */
-public class RestMessage {
+public class RestMessage<E> {
 
 	private MultivaluedMap<String, Object> headers = new MultivaluedMapImpl<String, Object>();
-	private Object body;
+	private E body;
 	private int httpStatusCode;
 
 	public int getHttpStatusCode() {
@@ -25,13 +25,13 @@ public class RestMessage {
 		this.httpStatusCode = httpStatusCode;
 	}
 
-	public RestMessage(MultivaluedMap<String, Object> headers, Object body) {
+	public RestMessage(MultivaluedMap<String, Object> headers, E body) {
 		super();
 		this.body = body;
 		this.headers = headers;
 	}
 
-	public RestMessage(MultivaluedMap<String, Object> headers, Object body,
+	public RestMessage(MultivaluedMap<String, Object> headers, E body,
 			int httpStatusCode) {
 		super();
 		this.headers = headers;
@@ -43,11 +43,11 @@ public class RestMessage {
 		this.headers = headers;
 	}
 
-	public Object getBody() {
+	public E getBody() {
 		return body;
 	}
 
-	public void setBody(Object body) {
+	public void setBody(E body) {
 		this.body = body;
 	}
 

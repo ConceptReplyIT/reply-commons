@@ -31,8 +31,8 @@ public abstract class AbstractRestClient
 	/***************************** GET Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult> T getRequest(String URL, MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
+	public <T extends BaseRestResponseResult<String>> T getRequest(String URL, MultivaluedMap<String, Object> headers,
+			RestResponseDecoder<T, String> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
 
@@ -40,7 +40,7 @@ public abstract class AbstractRestClient
 	}
 
 	@Override
-	public RestMessage getRequest(String URL,
+	public RestMessage<String> getRequest(String URL,
 			MultivaluedMap<String, Object> headers) throws RestClientException {
 
 		return getRequest(URL, headers, null);
@@ -49,7 +49,7 @@ public abstract class AbstractRestClient
 	/***************************** HEAD Requests ******************************/
 
 	@Override
-	public RestMessage headRequest(String URL,
+	public RestMessage<Void> headRequest(String URL,
 			MultivaluedMap<String, Object> headers) throws RestClientException {
 
 		return headRequest(URL, headers, null);
@@ -58,9 +58,9 @@ public abstract class AbstractRestClient
 	/***************************** POST Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult, E> T postRequest(String URL,
+	public <T extends BaseRestResponseResult<String>, E> T postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, RestResponseDecoder<T> rrd,
+			MediaType bodyMediaType, RestResponseDecoder<T, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
@@ -71,7 +71,7 @@ public abstract class AbstractRestClient
 	}
 
 	@Override
-	public <E> RestMessage postRequest(String URL,
+	public <E> RestMessage<String> postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType) throws RestClientException {
 
@@ -81,9 +81,9 @@ public abstract class AbstractRestClient
 	/***************************** PUT Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult, E> T putRequest(String URL, MultivaluedMap<String, Object> headers,
+	public <T extends BaseRestResponseResult<String>, E> T putRequest(String URL, MultivaluedMap<String, Object> headers,
 			GenericEntity<E> body, MediaType bodyMediaType,
-			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
+			RestResponseDecoder<T, String> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
 
@@ -92,7 +92,7 @@ public abstract class AbstractRestClient
 	}
 
 	@Override
-	public <E> RestMessage putRequest(String URL,
+	public <E> RestMessage<String> putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
 			MediaType bodyMediaType) throws RestClientException {
 
@@ -102,8 +102,8 @@ public abstract class AbstractRestClient
 	/***************************** DELETE Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult> T deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, RestResponseDecoder<T> rrd,
+	public <T extends BaseRestResponseResult<String>> T deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers, RestResponseDecoder<T, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
@@ -113,7 +113,7 @@ public abstract class AbstractRestClient
 	}
 
 	@Override
-	public RestMessage deleteRequest(String URL,
+	public RestMessage<String> deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers) throws RestClientException {
 
 		return deleteRequest(URL, headers, null);

@@ -20,7 +20,7 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
  * 
  */
 public class BaseRestResponseDecoder implements
-		RestResponseDecoder<BaseRestResponseResult> {
+		RestResponseDecoder<BaseRestResponseResult<String>, String> {
 
 	protected RestResponseDecodeStrategy defaultDecodeStrategy;
 
@@ -44,7 +44,7 @@ public class BaseRestResponseDecoder implements
 	}
 
 	@Override
-	public BaseRestResponseResult decode(RestMessage msg,
+	public BaseRestResponseResult<String> decode(RestMessage<String> msg,
 			RestResponseDecodeStrategy strategy)
 			throws NoMappingModelFoundException, MappingException, ServerErrorResponseException {
 
@@ -63,17 +63,17 @@ public class BaseRestResponseDecoder implements
 		 */
 		Object result;
 		try {
-			result = new ObjectMapper().readValue((String) msg.getBody(),
+			result = new ObjectMapper().readValue(msg.getBody(),
 					mappingClass);
 		} catch (IOException e) {
 			throw new MappingException(e.getMessage(), e, msg);
 		}
 
-		return new BaseRestResponseResult(status, result, mappingClass, msg);
+		return new BaseRestResponseResult<String>(status, result, mappingClass, msg);
 	}
 
 	@Override
-	public BaseRestResponseResult decode(RestMessage msg)
+	public BaseRestResponseResult<String> decode(RestMessage<String> msg)
 			throws NoMappingModelFoundException, MappingException, ServerErrorResponseException {
 		if (defaultDecodeStrategy == null)
 			throw new IllegalStateException(

@@ -396,19 +396,13 @@ public interface RestClient {
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<?> body,
 			MediaType bodyMediaType,
-			Request.Options reqOptions) throws RestClientException,
-			NoMappingModelFoundException, MappingException,
-			ServerErrorResponseException;
+			Request.Options reqOptions) throws RestClientException;
 	
 	public <R> RestMessage<R> doRequest(Request.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<?> body,
 			MediaType bodyMediaType,
-			Request.Options reqOptions, Class<R> entityClass) throws RestClientException,
-			NoMappingModelFoundException, MappingException,
-			ServerErrorResponseException;
+			Request.Options reqOptions, Class<R> entityClass) throws RestClientException;
 	
-	public <R> RestMessage<R> doRequest(Request request, Request.Options reqOptions, Class<R> entityClass) throws RestClientException,
-      NoMappingModelFoundException, MappingException,
-      ServerErrorResponseException;
+	public <R> RestMessage<R> doRequest(Request request, Class<R> entityClass) throws RestClientException;
 }

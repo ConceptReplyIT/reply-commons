@@ -59,7 +59,7 @@ public class RestClientImpl extends AbstractRestClient {
 	/***************************** POST Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult<String>, E> T postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T extends BaseRestResponseResult<String>> T postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			RestResponseDecoder<T, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
@@ -70,7 +70,7 @@ public class RestClientImpl extends AbstractRestClient {
 	}
 
 	@Override
-	public <E> RestMessage<String> postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public RestMessage<String> postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions)
 			throws RestClientException {
 
@@ -80,7 +80,7 @@ public class RestClientImpl extends AbstractRestClient {
 	/***************************** PUT Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult<String>, E> T putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T extends BaseRestResponseResult<String>> T putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			RestResponseDecoder<T, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
@@ -90,7 +90,7 @@ public class RestClientImpl extends AbstractRestClient {
 	}
 
 	@Override
-	public <E> RestMessage<String> putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public RestMessage<String> putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions)
 			throws RestClientException {
 
@@ -119,8 +119,8 @@ public class RestClientImpl extends AbstractRestClient {
 	/***************************** Generic Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult<String>, E> T doRequest(it.reply.utils.web.ws.rest.restclient.RestClient.RestMethod method, String URL,
-			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<E> body,
+	public <T extends BaseRestResponseResult<String>> T doRequest(it.reply.utils.web.ws.rest.restclient.RestClient.RestMethod method, String URL,
+			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<?> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			RestResponseDecoder<T, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException, ServerErrorResponseException {
@@ -133,8 +133,8 @@ public class RestClientImpl extends AbstractRestClient {
 	// ******************************/
 
 	@Override
-	public <E> RestMessage<String> doRequest(RestMethod method, String URL, MultivaluedMap<String, Object> headers,
-			MultivaluedMap<String, Object> queryParams, GenericEntity<E> body, MediaType bodyMediaType,
+	public RestMessage<String> doRequest(RestMethod method, String URL, MultivaluedMap<String, Object> headers,
+			MultivaluedMap<String, Object> queryParams, GenericEntity<?> body, MediaType bodyMediaType,
 			RequestOptions reqOptions) throws RestClientException {
 
 		return doRequest(method, URL, headers, queryParams, body, bodyMediaType, reqOptions, String.class);
@@ -142,8 +142,8 @@ public class RestClientImpl extends AbstractRestClient {
 	}
 
 	@Override
-	public <E, R> RestMessage<R> doRequest(it.reply.utils.web.ws.rest.restclient.RestClient.RestMethod method, String URL,
-			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<E> body,
+	public <R> RestMessage<R> doRequest(it.reply.utils.web.ws.rest.restclient.RestClient.RestMethod method, String URL,
+			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<?> body,
 			MediaType bodyMediaType, it.reply.utils.web.ws.rest.restclient.RestClient.RequestOptions reqOptions,
 			Class<R> entityClass) throws RestClientException {
 

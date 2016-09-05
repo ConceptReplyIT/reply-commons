@@ -58,8 +58,8 @@ public abstract class AbstractRestClient
 	/***************************** POST Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult<String>, E> T postRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T extends BaseRestResponseResult<String>> T postRequest(String URL,
+			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType, RestResponseDecoder<T, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -71,8 +71,8 @@ public abstract class AbstractRestClient
 	}
 
 	@Override
-	public <E> RestMessage<String> postRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public RestMessage<String> postRequest(String URL,
+			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType) throws RestClientException {
 
 		return postRequest(URL, headers, body, bodyMediaType, null);
@@ -81,8 +81,8 @@ public abstract class AbstractRestClient
 	/***************************** PUT Requests ******************************/
 
 	@Override
-	public <T extends BaseRestResponseResult<String>, E> T putRequest(String URL, MultivaluedMap<String, Object> headers,
-			GenericEntity<E> body, MediaType bodyMediaType,
+	public <T extends BaseRestResponseResult<String>> T putRequest(String URL, MultivaluedMap<String, Object> headers,
+			GenericEntity<?> body, MediaType bodyMediaType,
 			RestResponseDecoder<T, String> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
@@ -92,8 +92,8 @@ public abstract class AbstractRestClient
 	}
 
 	@Override
-	public <E> RestMessage<String> putRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public RestMessage<String> putRequest(String URL,
+			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
 			MediaType bodyMediaType) throws RestClientException {
 
 		return putRequest(URL, headers, body, bodyMediaType, null);

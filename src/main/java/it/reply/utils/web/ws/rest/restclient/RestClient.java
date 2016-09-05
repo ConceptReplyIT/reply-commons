@@ -24,70 +24,6 @@ import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
  */
 public interface RestClient {
 
-	public enum RestMethod {
-		GET, POST, PUT, DELETE, HEAD;
-	}
-	
-	public class ProxyOptions {
-		private String hostname;
-		private int port;
-		private String protocol;
-
-		public ProxyOptions(String hostname, int port, String protocol) {
-			super();
-			this.hostname = hostname;
-			this.port = port;
-			this.protocol = protocol;
-		}
-
-		public String getHostname() {
-			return hostname;
-		}
-
-		public void setHostname(String hostname) {
-			this.hostname = hostname;
-		}
-
-		public int getPort() {
-			return port;
-		}
-
-		public void setPort(int port) {
-			this.port = port;
-		}
-
-		public String getProtocol() {
-			return protocol;
-		}
-
-		public void setProtocol(String protocol) {
-			this.protocol = protocol;
-		}
-	}
-
-	public class RequestOptions {
-		private int timeout;
-		private ProxyOptions proxy;
-
-		// TODO Other useful fields like HTTPS
-		// Authentication/Keystore/Truststore etc
-		public int getTimeout() {
-			return timeout;
-		}
-
-		public void setTimeout(int timeout) {
-			this.timeout = timeout;
-		}
-
-		public ProxyOptions getProxy() {
-			return proxy;
-		}
-
-		public void setProxy(ProxyOptions proxy) {
-			this.proxy = proxy;
-		}
-	}
-
 	/**
 	 * 
 	 * @return the default request timeout in ms.
@@ -128,7 +64,7 @@ public interface RestClient {
 	 *             application protocol (ie. 404)
 	 */
 	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType getRequest(String URL,
-			MultivaluedMap<String, Object> headers, RequestOptions reqOptions,
+			MultivaluedMap<String, Object> headers, Request.Options reqOptions,
 			RestResponseDecoder<RestResponseResultType, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -161,7 +97,7 @@ public interface RestClient {
 	 *             the remote application, just for the HTTP request).
 	 */
 	public RestMessage<String> getRequest(String URL,
-			MultivaluedMap<String, Object> headers, RequestOptions reqOptions)
+			MultivaluedMap<String, Object> headers, Request.Options reqOptions)
 			throws RestClientException;
 
 	/**
@@ -188,7 +124,7 @@ public interface RestClient {
 	 *             the remote application, just for the HTTP request).
 	 */
 	public RestMessage<Void> headRequest(String URL,
-			MultivaluedMap<String, Object> headers, RequestOptions reqOptions)
+			MultivaluedMap<String, Object> headers, Request.Options reqOptions)
 			throws RestClientException;
 
 	/**
@@ -232,7 +168,7 @@ public interface RestClient {
 	 */
 	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
-			MediaType bodyMediaType, RequestOptions reqOptions,
+			MediaType bodyMediaType, Request.Options reqOptions,
 			RestResponseDecoder<RestResponseResultType, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -272,7 +208,7 @@ public interface RestClient {
 	 */
 	public RestMessage<String> postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
-			MediaType bodyMediaType, RequestOptions reqOptions)
+			MediaType bodyMediaType, Request.Options reqOptions)
 			throws RestClientException;
 
 	/**
@@ -317,7 +253,7 @@ public interface RestClient {
 	 */
 	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
-			MediaType bodyMediaType, RequestOptions reqOptions,
+			MediaType bodyMediaType, Request.Options reqOptions,
 			RestResponseDecoder<RestResponseResultType, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -357,7 +293,7 @@ public interface RestClient {
 	 */
 	public RestMessage<String> putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<?> body,
-			MediaType bodyMediaType, RequestOptions reqOptions)
+			MediaType bodyMediaType, Request.Options reqOptions)
 			throws RestClientException;
 
 	/**
@@ -397,7 +333,7 @@ public interface RestClient {
 	 */
 	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers,
-			RequestOptions reqOptions,
+			Request.Options reqOptions,
 			RestResponseDecoder<RestResponseResultType, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
@@ -430,7 +366,7 @@ public interface RestClient {
 	 *             the remote application, just for the HTTP request).
 	 */
 	public RestMessage<String> deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, RequestOptions reqOptions)
+			MultivaluedMap<String, Object> headers, Request.Options reqOptions)
 			throws RestClientException;
 
 	/**
@@ -446,29 +382,33 @@ public interface RestClient {
 	/**
 	 * 	
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType doRequest(RestMethod method, String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType doRequest(Request.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<?> body,
 			MediaType bodyMediaType,
-			RequestOptions reqOptions,
+			Request.Options reqOptions,
 			RestResponseDecoder<RestResponseResultType, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 	
-	public RestMessage<String> doRequest(RestMethod method, String URL,
+	public RestMessage<String> doRequest(Request.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<?> body,
 			MediaType bodyMediaType,
-			RequestOptions reqOptions) throws RestClientException,
+			Request.Options reqOptions) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 	
-	public <R> RestMessage<R> doRequest(RestMethod method, String URL,
+	public <R> RestMessage<R> doRequest(Request.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<?> body,
 			MediaType bodyMediaType,
-			RequestOptions reqOptions, Class<R> entityClass) throws RestClientException,
+			Request.Options reqOptions, Class<R> entityClass) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
+	
+	public <R> RestMessage<R> doRequest(Request request, Request.Options reqOptions, Class<R> entityClass) throws RestClientException,
+      NoMappingModelFoundException, MappingException,
+      ServerErrorResponseException;
 }

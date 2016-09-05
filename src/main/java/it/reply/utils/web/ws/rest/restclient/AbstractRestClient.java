@@ -4,6 +4,8 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.google.common.collect.Lists;
+
 import it.reply.utils.web.ws.rest.apiencoding.MappingException;
 import it.reply.utils.web.ws.rest.apiencoding.NoMappingModelFoundException;
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
@@ -13,10 +15,15 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
+import java.util.List;
+import java.util.Objects;
+
 public abstract class AbstractRestClient
 		implements RestClient {
 
 	protected int defaultTimeout = 60000; // in ms
+	
+	protected List<RequestInterceptor> interceptors = Lists.newArrayList();
 
 	@Override
 	public int getDefaultTimeout() {
@@ -28,6 +35,17 @@ public abstract class AbstractRestClient
 		this.defaultTimeout = defaultTimeout;
 	}
 
+	@Override
+	public void setRequestInserceptors(List<RequestInterceptor> interceptors) {
+	  Objects.requireNonNull(interceptors, "interceptors must not be null");
+	  this.interceptors = interceptors;
+	}
+	
+	@Override
+	public List<RequestInterceptor> getRequestInserceptors() {
+    return interceptors;
+	}
+	
 	/***************************** GET Requests ******************************/
 
 	@Override

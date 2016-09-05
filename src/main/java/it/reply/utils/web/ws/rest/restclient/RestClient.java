@@ -13,6 +13,8 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
+import java.util.List;
+
 /**
  * A general RestClient to make Rest requests. <br/>
  * This client is meant to decode automatically the JSON response body using the
@@ -37,6 +39,10 @@ public interface RestClient {
 	 */
 	public void setDefaultTimeout(int defaultTimeout);
 
+	public void setRequestInserceptors(List<RequestInterceptor> interceptors);
+	
+	public List<RequestInterceptor> getRequestInserceptors();
+	
 	/***************************** GET Requests ******************************/
 
 	/**

@@ -27,6 +27,12 @@ public class RestClientImpl extends AbstractRestClient {
   public <R> RestMessage<R> doRequest(Request request,
       Class<R> entityClass) throws RestClientException {
 
+	  if (getRequestInserceptors() != null) {
+  	  for (RequestInterceptor interceptor : getRequestInserceptors()) {
+  	    interceptor.intercept(request);
+  	  }
+	  }
+	  
     ResteasyClientBuilder cb = new ResteasyClientBuilder();
 
     Request.Options reqOptions = request.getReqOptions();

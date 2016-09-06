@@ -13,6 +13,7 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseResult;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
+import it.reply.utils.web.ws.rest.restclient.Request.RequestBuilder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
 import java.util.List;
@@ -44,6 +45,11 @@ public abstract class AbstractRestClient
 	@Override
 	public List<RequestInterceptor> getRequestInserceptors() {
     return interceptors;
+	}
+	
+	@Override
+	public RequestBuilder request(String url) {
+	  return new RequestBuilder(this, url); 
 	}
 	
 	/***************************** GET Requests ******************************/
@@ -254,4 +260,10 @@ public abstract class AbstractRestClient
     return doRequest(request, entityClass);
   }
   
+  @Override
+  public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType doRequest(Request request, RestResponseDecoder<RestResponseResultType, String> rrd,
+      RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    RestMessage<String> msg = doRequest(request, String.class);
+    return rrd.decode(msg, strategy);
+  }
 }

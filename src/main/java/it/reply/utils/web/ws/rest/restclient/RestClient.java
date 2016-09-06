@@ -11,6 +11,7 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseResult;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
+import it.reply.utils.web.ws.rest.restclient.Request.RequestBuilder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
 import java.util.List;
@@ -42,6 +43,8 @@ public interface RestClient {
 	public void setRequestInserceptors(List<RequestInterceptor> interceptors);
 	
 	public List<RequestInterceptor> getRequestInserceptors();
+	
+	public RequestBuilder request(String url);
 	
 	/***************************** GET Requests ******************************/
 
@@ -411,4 +414,7 @@ public interface RestClient {
 			Request.Options reqOptions, Class<R> entityClass) throws RestClientException;
 	
 	public <R> RestMessage<R> doRequest(Request request, Class<R> entityClass) throws RestClientException;
+	
+	public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType doRequest(Request request, RestResponseDecoder<RestResponseResultType, String> rrd,
+      RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException;
 }

@@ -14,7 +14,6 @@ public abstract class AbstractAPIClient {
 
     protected String baseWSUrl;
     protected RestClientFactory restClientFactory;
-    protected RestClient restClient;
 
     /**
      * Creates a {@link AbstractAPIClient} using the default
@@ -44,19 +43,14 @@ public abstract class AbstractAPIClient {
 	}
 	this.baseWSUrl = baseWSUrl;
 	this.restClientFactory = restClientFactory;
-	this.restClient = restClientFactory.getRestClient();
     }
 
     public String getBaseWSUrl() {
 	return baseWSUrl;
     }
 
-    public RestClientFactory getRestClientFactory() {
-	return restClientFactory;
-    }
-
     public RestClient getRestClient() {
-	return restClient;
+	return restClientFactory.getRestClient();
     }
 
 }

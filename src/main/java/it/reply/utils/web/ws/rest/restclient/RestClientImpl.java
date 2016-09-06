@@ -13,12 +13,16 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
 public class RestClientImpl extends AbstractRestClient {
 
+  private Logger LOG = LoggerFactory.getLogger(RestClientImpl.class);
+  
 	@Override
   public <R> RestMessage<R> doRequest(Request request,
       Class<R> entityClass) throws RestClientException {
@@ -135,9 +139,14 @@ public class RestClientImpl extends AbstractRestClient {
         }
   
         RestMessage<R> msg;
-        try {
-          msg = new RestMessage<R>(response.getHeaders(), response.readEntity(entityClass), response.getStatus());
-        } catch (Exception e) {
+        if (entityClass != null) {
+          try {
+            msg = new RestMessage<R>(response.getHeaders(), response.readEntity(entityClass), response.getStatus());
+          } catch (Exception e) {
+            LOG.warn("Unable to read entity from response", e);
+            msg = new RestMessage<R>(response.getHeaders(), null, response.getStatus());
+          }
+        } else {
           msg = new RestMessage<R>(response.getHeaders(), null, response.getStatus());
         }
   

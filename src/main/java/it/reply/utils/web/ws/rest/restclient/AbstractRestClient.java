@@ -4,6 +4,8 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.google.common.collect.Lists;
+
 import it.reply.utils.web.ws.rest.apiencoding.MappingException;
 import it.reply.utils.web.ws.rest.apiencoding.NoMappingModelFoundException;
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
@@ -11,12 +13,18 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseResult;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
+import it.reply.utils.web.ws.rest.restclient.Request.RequestBuilder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
-public abstract class AbstractRestClient<T extends BaseRestResponseResult>
-		implements RestClient<T> {
+import java.util.List;
+import java.util.Objects;
+
+public abstract class AbstractRestClient
+		implements RestClient {
 
 	protected int defaultTimeout = 60000; // in ms
+	
+	protected List<RequestInterceptor> interceptors = Lists.newArrayList();
 
 	@Override
 	public int getDefaultTimeout() {
@@ -28,11 +36,27 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 		this.defaultTimeout = defaultTimeout;
 	}
 
+	@Override
+	public void setRequestInserceptors(List<RequestInterceptor> interceptors) {
+	  Objects.requireNonNull(interceptors, "interceptors must not be null");
+	  this.interceptors = interceptors;
+	}
+	
+	@Override
+	public List<RequestInterceptor> getRequestInserceptors() {
+    return interceptors;
+	}
+	
+	@Override
+	public RequestBuilder<?> request(String url) {
+	  return new RequestBuilder<>(this, url); 
+	}
+	
 	/***************************** GET Requests ******************************/
 
 	@Override
-	public T getRequest(String URL, MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType getRequest(String URL, MultivaluedMap<String, Object> headers,
+			RestResponseDecoder<RestResponseResultType, R, String> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
 
@@ -40,36 +64,52 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	}
 
 	@Override
-	public RestMessage getRequest(String URL,
+	public RestMessage<String> getRequest(String URL,
 			MultivaluedMap<String, Object> headers) throws RestClientException {
 
 		return getRequest(URL, headers, null);
 	}
 
-	/***************************** HEAD Requests ******************************/
-
 	@Override
-	public T headRequest(String URL, MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
-			throws RestClientException, NoMappingModelFoundException,
-			MappingException, ServerErrorResponseException {
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType getRequest(String URL, MultivaluedMap<String, Object> headers,
+	    Request.Options reqOptions, RestResponseDecoder<RestResponseResultType, R, String> rrd,
+	    RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException,
+	    MappingException, ServerErrorResponseException {
 
-		return headRequest(URL, headers, null, rrd, strategy);
+	  RestMessage<String> msg = doRequest(Request.RestMethod.GET, URL, headers, null, null, null, reqOptions);
+
+	  return rrd.decode(msg, strategy);
 	}
 
 	@Override
-	public RestMessage headRequest(String URL,
+	public RestMessage<String> getRequest(String URL, MultivaluedMap<String, Object> headers,
+	    Request.Options reqOptions) throws RestClientException {
+
+	  return doRequest(Request.RestMethod.GET, URL, headers, null, null, null, reqOptions);
+	}
+	
+	/***************************** HEAD Requests ******************************/
+
+	@Override
+	public RestMessage<Void> headRequest(String URL,
 			MultivaluedMap<String, Object> headers) throws RestClientException {
 
 		return headRequest(URL, headers, null);
 	}
 
+	@Override
+	public RestMessage<Void> headRequest(String URL, MultivaluedMap<String, Object> headers,
+	    Request.Options reqOptions) throws RestClientException {
+
+	  return doRequest(Request.RestMethod.HEAD, URL, headers, null, null, null, reqOptions, Void.class);
+	}
+	
 	/***************************** POST Requests ******************************/
 
 	@Override
-	public <E> T postRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, RestResponseDecoder<T> rrd,
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType postRequest(String URL,
+			MultivaluedMap<String, Object> headers, GenericEntity<B> body,
+			MediaType bodyMediaType, RestResponseDecoder<RestResponseResultType, R, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
@@ -80,19 +120,38 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	}
 
 	@Override
-	public <E> RestMessage postRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T> RestMessage<String> postRequest(String URL,
+			MultivaluedMap<String, Object> headers, GenericEntity<T> body,
 			MediaType bodyMediaType) throws RestClientException {
 
 		return postRequest(URL, headers, body, bodyMediaType, null);
 	}
 
+	@Override
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<B> body,
+	    MediaType bodyMediaType, Request.Options reqOptions,
+	    RestResponseDecoder<RestResponseResultType, R, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
+	    NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+
+	  RestMessage<String> msg = doRequest(Request.RestMethod.POST, URL, headers, null, body, bodyMediaType, reqOptions);
+	  // System.out.println(msg.getBody().toString());
+	  return rrd.decode(msg, strategy);
+	}
+
+	@Override
+	public <T> RestMessage<String> postRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<T> body,
+	    MediaType bodyMediaType, Request.Options reqOptions)
+	    throws RestClientException {
+
+	  return doRequest(Request.RestMethod.POST, URL, headers, null, body, bodyMediaType, reqOptions);
+	}
+	
 	/***************************** PUT Requests ******************************/
 
 	@Override
-	public <E> T putRequest(String URL, MultivaluedMap<String, Object> headers,
-			GenericEntity<E> body, MediaType bodyMediaType,
-			RestResponseDecoder<T> rrd, RestResponseDecodeStrategy strategy)
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType putRequest(String URL, MultivaluedMap<String, Object> headers,
+			GenericEntity<B> body, MediaType bodyMediaType,
+			RestResponseDecoder<RestResponseResultType, R, String> rrd, RestResponseDecodeStrategy strategy)
 			throws RestClientException, NoMappingModelFoundException,
 			MappingException, ServerErrorResponseException {
 
@@ -101,33 +160,110 @@ public abstract class AbstractRestClient<T extends BaseRestResponseResult>
 	}
 
 	@Override
-	public <E> RestMessage putRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
+	public <T> RestMessage<String> putRequest(String URL,
+			MultivaluedMap<String, Object> headers, GenericEntity<T> body,
 			MediaType bodyMediaType) throws RestClientException {
 
 		return putRequest(URL, headers, body, bodyMediaType, null);
 	}
 
+	@Override
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<B> body,
+	    MediaType bodyMediaType, Request.Options reqOptions,
+	    RestResponseDecoder<RestResponseResultType, R, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
+	    NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+
+	  RestMessage<String> msg = doRequest(Request.RestMethod.PUT, URL, headers, null, body, bodyMediaType, reqOptions);
+	  return rrd.decode(msg, strategy);
+	}
+
+	@Override
+	public <T> RestMessage<String> putRequest(String URL, MultivaluedMap<String, Object> headers, GenericEntity<T> body,
+	    MediaType bodyMediaType, Request.Options reqOptions)
+	    throws RestClientException {
+
+	  return doRequest(Request.RestMethod.PUT, URL, headers, null, body, bodyMediaType, reqOptions);
+	}
+	
 	/***************************** DELETE Requests ******************************/
 
 	@Override
-	public <E> T deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType, RestResponseDecoder<T> rrd,
+	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers, RestResponseDecoder<RestResponseResultType, R, String> rrd,
 			RestResponseDecodeStrategy strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
 
-		return deleteRequest(URL, headers, body, bodyMediaType, null, rrd,
+		return deleteRequest(URL, headers, null, rrd,
 				strategy);
 	}
 
 	@Override
-	public <E> RestMessage deleteRequest(String URL,
-			MultivaluedMap<String, Object> headers, GenericEntity<E> body,
-			MediaType bodyMediaType) throws RestClientException {
+	public RestMessage<String> deleteRequest(String URL,
+			MultivaluedMap<String, Object> headers) throws RestClientException {
 
-		return deleteRequest(URL, headers, body, bodyMediaType, null);
+		return deleteRequest(URL, headers, null);
 	}
 
+  @Override
+  public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType deleteRequest(String URL, MultivaluedMap<String, Object> headers, Request.Options reqOptions,
+      RestResponseDecoder<RestResponseResultType, R, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
+      NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+  
+    RestMessage<String> msg = doRequest(Request.RestMethod.DELETE, URL, headers, null, null, null, reqOptions);
+  
+    return rrd.decode(msg, strategy);
+  }
+  
+  @Override
+  public RestMessage<String> deleteRequest(String URL, MultivaluedMap<String, Object> headers, 
+      Request.Options reqOptions) throws RestClientException {
+  
+    return doRequest(Request.RestMethod.DELETE, URL, headers, null, null, null, reqOptions);
+  }
+  
+  /***************************** Generic Requests ******************************/
+
+  @Override
+  public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType doRequest(Request.RestMethod method, String URL,
+      MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<B> body,
+      MediaType bodyMediaType, Request.Options reqOptions,
+      RestResponseDecoder<RestResponseResultType, R, String> rrd, RestResponseDecodeStrategy strategy) throws RestClientException,
+      NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+
+    RestMessage<String> msg = doRequest(method, URL, headers, queryParams, body, bodyMediaType, reqOptions);
+    return rrd.decode(msg, strategy);
+  }
+
+  @Override
+  public <T> RestMessage<String> doRequest(Request.RestMethod method, String URL, MultivaluedMap<String, Object> headers,
+      MultivaluedMap<String, Object> queryParams, GenericEntity<T> body, MediaType bodyMediaType,
+      Request.Options reqOptions) throws RestClientException {
+
+    return doRequest(method, URL, headers, queryParams, body, bodyMediaType, reqOptions, String.class);
+
+  }
+
+  @Override
+  public <B, E> RestMessage<E> doRequest(Request.RestMethod method, String URL,
+      MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<B> body,
+      MediaType bodyMediaType, Request.Options reqOptions,
+      Class<E> entityClass) throws RestClientException {
+    
+    Request<B> request = new Request<B>(method, URL);
+    request.setHeaders(headers);
+    request.setQueryParams(queryParams);
+    request.setBody(body);
+    request.setBodyMediaType(bodyMediaType);
+    request.setReqOptions(reqOptions);
+    
+    return doRequest(request, entityClass);
+  }
+  
+  @Override
+  public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType doRequest(Request<B> request, RestResponseDecoder<RestResponseResultType, R, String> rrd,
+      RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    RestMessage<String> msg = doRequest(request, String.class);
+    return rrd.decode(msg, strategy);
+  }
 }

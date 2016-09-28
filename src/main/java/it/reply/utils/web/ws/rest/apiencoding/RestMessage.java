@@ -1,18 +1,20 @@
 package it.reply.utils.web.ws.rest.apiencoding;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
+import com.google.common.base.MoreObjects;
+
 
 /**
  * This POJO holds a Rest Message (HttpStatusCode, Headers and Body).
  * @author l.biava
  *
  */
-public class RestMessage {
+public class RestMessage<E> {
 
-	private MultivaluedMap<String, Object> headers = new MultivaluedMapImpl<String, Object>();
-	private Object body;
+	private MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
+	private E body;
 	private int httpStatusCode;
 
 	public int getHttpStatusCode() {
@@ -23,13 +25,13 @@ public class RestMessage {
 		this.httpStatusCode = httpStatusCode;
 	}
 
-	public RestMessage(MultivaluedMap<String, Object> headers, Object body) {
+	public RestMessage(MultivaluedMap<String, Object> headers, E body) {
 		super();
 		this.body = body;
 		this.headers = headers;
 	}
 
-	public RestMessage(MultivaluedMap<String, Object> headers, Object body,
+	public RestMessage(MultivaluedMap<String, Object> headers, E body,
 			int httpStatusCode) {
 		super();
 		this.headers = headers;
@@ -41,11 +43,11 @@ public class RestMessage {
 		this.headers = headers;
 	}
 
-	public Object getBody() {
+	public E getBody() {
 		return body;
 	}
 
-	public void setBody(Object body) {
+	public void setBody(E body) {
 		this.body = body;
 	}
 
@@ -55,8 +57,10 @@ public class RestMessage {
 
 	@Override
 	public String toString() {
-		return "RestMessage [headers=" + headers + ", body=" + body
-				+ ", httpStatusCode=" + httpStatusCode + "]";
+	  return MoreObjects.toStringHelper(this)
+	  .add("headers", headers)
+	  .add("body", body)
+	  .add("httpStatusCode", httpStatusCode).toString();
 	}
 	
 }

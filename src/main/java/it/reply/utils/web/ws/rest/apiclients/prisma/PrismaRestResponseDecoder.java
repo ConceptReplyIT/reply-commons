@@ -25,7 +25,7 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
  * 
  */
 public class PrismaRestResponseDecoder<APIResponseType> extends
-		BaseRestResponseDecoder {
+		BaseRestResponseDecoder<BaseRestResponseResult<Object, String>, Object> {
 
 	public PrismaRestResponseDecoder(JavaType targetClass) {
 		super();
@@ -47,7 +47,7 @@ public class PrismaRestResponseDecoder<APIResponseType> extends
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BaseRestResponseResult decode(RestMessage msg,
+	public BaseRestResponseResult<Object, String> decode(RestMessage<String> msg,
 			RestResponseDecodeStrategy strategy)
 			throws NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
@@ -60,7 +60,7 @@ public class PrismaRestResponseDecoder<APIResponseType> extends
 	}
 
 	@Override
-	public BaseRestResponseResult decode(RestMessage msg)
+	public BaseRestResponseResult<Object, String> decode(RestMessage<String> msg)
 			throws NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
 
@@ -77,13 +77,13 @@ public class PrismaRestResponseDecoder<APIResponseType> extends
 		if (msg.getBody() != null)
 		{
 			try {
-				result = new ObjectMapper().readValue((String) msg.getBody(), mappingClass);
+				result = new ObjectMapper().readValue(msg.getBody(), mappingClass);
 			} catch (IOException e) {
 				throw new MappingException(e.getMessage(), e, msg);
 			}
 		}
 		
-		return new BaseRestResponseResult(status, result, mappingClass, msg);
+		return new BaseRestResponseResult<Object, String>(status, result, mappingClass, msg);
 	}
 
 }

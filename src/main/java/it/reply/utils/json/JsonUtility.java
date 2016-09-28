@@ -2,8 +2,11 @@ package it.reply.utils.json;
 
 import java.io.IOException;
 
+import com.google.common.reflect.TypeToken;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -62,6 +65,28 @@ public class JsonUtility {
 		return om.readValue(jsonString, typeReference);
 	}
 
+	 /**
+   * Static method that makes deserializing of a JSON string into an object of
+   * class represented by <b>mappingClass</b>
+   * 
+   * @param jsonString
+   *            JSON string to deserialize
+   * @param mappingClass
+   *            mappingClass of the class to return.
+   * @return Returns a class instance <b>mappingClass</b> containing encoded
+   *         data in the JSON string.
+   * @throws IOException
+   * @throws JsonMappingException
+   * @throws JsonParseException
+   */
+  public static <T> T deserializeJson(String jsonString,
+      JavaType mappingClass) throws JsonParseException,
+      JsonMappingException, IOException {
+    ObjectMapper om = new ObjectMapper();
+
+    return om.readValue(jsonString, mappingClass);
+  }
+  
 	/**
 	 * Static method that performs the serialization of an object into a JSON
 	 * string
@@ -83,4 +108,9 @@ public class JsonUtility {
 		return result;
 
 	}
+
+  public static JavaType getJavaType(TypeToken<?> type) {
+    ObjectMapper om = new ObjectMapper();
+    return om.constructType(type.getType());
+  }
 }

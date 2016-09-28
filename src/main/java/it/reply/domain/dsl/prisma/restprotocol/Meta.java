@@ -1,5 +1,6 @@
 package it.reply.domain.dsl.prisma.restprotocol;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,9 +21,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "status", "pagination" })
-public class Meta {
+public class Meta implements Serializable {
 
-	@JsonProperty("status")
+  private static final long serialVersionUID = 6931113879427082817L;
+  
+  @JsonProperty("status")
 	private StatusType status;
 	@JsonProperty("pagination")
 	private Pagination pagination;

@@ -1,6 +1,5 @@
 package it.reply.utils.web.ws.rest.apiclients;
 
-import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseResult;
 import it.reply.utils.web.ws.rest.restclient.RestClient;
 import it.reply.utils.web.ws.rest.restclient.RestClientFactory;
 import it.reply.utils.web.ws.rest.restclient.RestClientFactoryImpl;
@@ -15,7 +14,6 @@ public abstract class AbstractAPIClient {
 
     protected String baseWSUrl;
     protected RestClientFactory restClientFactory;
-    protected RestClient<BaseRestResponseResult> restClient;
 
     /**
      * Creates a {@link AbstractAPIClient} using the default
@@ -45,19 +43,14 @@ public abstract class AbstractAPIClient {
 	}
 	this.baseWSUrl = baseWSUrl;
 	this.restClientFactory = restClientFactory;
-	this.restClient = restClientFactory.getRestClient();
     }
 
     public String getBaseWSUrl() {
 	return baseWSUrl;
     }
 
-    public RestClientFactory getRestClientFactory() {
-	return restClientFactory;
-    }
-
-    public RestClient<BaseRestResponseResult> getRestClient() {
-	return restClient;
+    public RestClient getRestClient() {
+	return restClientFactory.getRestClient();
     }
 
 }

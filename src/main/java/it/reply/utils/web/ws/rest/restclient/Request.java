@@ -7,6 +7,7 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseResult;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecoder;
+import it.reply.utils.web.ws.rest.apiencoding.decode.SimpleRestResponseDecoder;
 import it.reply.utils.web.ws.rest.restclient.exceptions.RestClientException;
 
 import java.io.Serializable;
@@ -15,9 +16,10 @@ import java.util.Objects;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
-public class Request implements Serializable {
+public class Request<T> implements Serializable {
   
   private static final long serialVersionUID = -7369063656963527676L;
   
@@ -94,7 +96,7 @@ public class Request implements Serializable {
   private String URL;
   private MultivaluedMap<String, Object> headers;
   private MultivaluedMap<String, Object> queryParams; 
-  private GenericEntity<?> body;
+  private GenericEntity<T> body;
   private MediaType bodyMediaType;
   private Request.Options reqOptions;
   
@@ -103,12 +105,12 @@ public class Request implements Serializable {
     setURL(url);
   }
   
-  public Request(RequestBuilder builder, RestMethod method) {
+  public Request(RequestBuilder<T> builder, RestMethod method) {
     setMethod(method);
     setURL(builder.getUrl());
     setHeaders(builder.getHeaders());
     setQueryParams(builder.getQueryParams());
-    Entity<GenericEntity<?>> body = builder.getBody();
+    Entity<GenericEntity<T>> body = builder.getBody();
     if (body != null) {
       setBody(body.getEntity());
       setBodyMediaType(body.getMediaType());
@@ -128,7 +130,7 @@ public class Request implements Serializable {
   public MultivaluedMap<String, Object> getQueryParams() {
     return queryParams;
   }
-  public GenericEntity<?> getBody() {
+  public GenericEntity<T> getBody() {
     return body;
   }
   public MediaType getBodyMediaType() {
@@ -151,7 +153,7 @@ public class Request implements Serializable {
   public void setQueryParams(MultivaluedMap<String, Object> queryParams) {
     this.queryParams = queryParams;
   }
-  public void setBody(GenericEntity<?> body) {
+  public void setBody(GenericEntity<T> body) {
     this.body = body;
   }
   public void setBodyMediaType(MediaType bodyMediaType) {
@@ -161,12 +163,12 @@ public class Request implements Serializable {
     this.reqOptions = reqOptions;
   }
   
-  public static class RequestBuilder {
+  public static class RequestBuilder<T> {
     private RestClient restClient;
     private String url;
     private MultivaluedMap<String, Object> headers;
     private MultivaluedMap<String, Object> queryParams; 
-    private Entity<GenericEntity<?>> body;
+    private Entity<GenericEntity<T>> body;
     private Request.Options reqOptions;
     
     public RequestBuilder(RestClient restClient, String url) {
@@ -192,7 +194,7 @@ public class Request implements Serializable {
       return queryParams;
     }
 
-    public Entity<GenericEntity<?>> getBody() {
+    public Entity<GenericEntity<T>> getBody() {
       return body;
     }
 
@@ -200,73 +202,114 @@ public class Request implements Serializable {
       return reqOptions;
     }
 
-    public RequestBuilder withHeaders(MultivaluedMap<String, Object> headers) {
+    public RequestBuilder<T> withHeaders(MultivaluedMap<String, Object> headers) {
       this.headers = headers;
       return this;
     }
-
-    public RequestBuilder withQueryParams(MultivaluedMap<String, Object> queryParams) {
+    
+    public RequestBuilder<T> withHeader(String key, Object value) {
+      if (headers == null) {
+        headers = new MultivaluedHashMap<>();
+      }
+      headers.add(key, value);
+      return this;
+    }
+    
+    public RequestBuilder<T> withQueryParams(MultivaluedMap<String, Object> queryParams) {
       this.queryParams = queryParams;
       return this;
     }
 
-    public RequestBuilder withBody(Entity<GenericEntity<?>> body) {
+    public RequestBuilder<T> withQueryParam(String key, Object value) {
+      if (queryParams == null) {
+        queryParams = new MultivaluedHashMap<>();
+      }
+      queryParams.add(key, value);
+      return this;
+    }
+    
+    public RequestBuilder<T> withBody(Entity<GenericEntity<T>> body) {
       this.body = body;
       return this;
     }
 
-    public RequestBuilder withReqOptions(Request.Options reqOptions) {
+    public RequestBuilder<T> withReqOptions(Request.Options reqOptions) {
       this.reqOptions = reqOptions;
       return this;
     }
     
     public <R> RestMessage<R> get(Class<R> entityClass) throws RestClientException {
-      return getRestClient().doRequest(new Request(this, RestMethod.GET), entityClass);
+      return execute(RestMethod.GET, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, String> rrd,
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return getRestClient().doRequest(new Request(this, RestMethod.GET), rrd, strategy);
+      return execute(RestMethod.GET, rrd, strategy);
+    }
+    
+    public <E> BaseRestResponseResult<E, String> get(SimpleRestResponseDecoder<E> rrd)
+        throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+      return execute(RestMethod.GET, rrd);
     }
     
     public <R> RestMessage<R> post(Class<R> entityClass) throws RestClientException {
-      return getRestClient().doRequest(new Request(this, RestMethod.POST), entityClass);
+      return execute(RestMethod.POST, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, String> rrd,
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return getRestClient().doRequest(new Request(this, RestMethod.POST), rrd, strategy);
+      return execute(RestMethod.POST, rrd, strategy);
+    }
+    
+    public <E> BaseRestResponseResult<E, String> post(SimpleRestResponseDecoder<E> rrd)
+        throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+      return execute(RestMethod.POST, rrd);
     }
     
     public <R> RestMessage<R> put(Class<R> entityClass) throws RestClientException {
-      return getRestClient().doRequest(new Request(this, RestMethod.PUT), entityClass);
+      return execute(RestMethod.PUT, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, String> rrd,
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return getRestClient().doRequest(new Request(this, RestMethod.PUT), rrd, strategy);
+      return execute(RestMethod.PUT, rrd, strategy);
+    }
+    
+    public <E> BaseRestResponseResult<E, String> put(SimpleRestResponseDecoder<E> rrd)
+        throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+      return execute(RestMethod.PUT, rrd);
     }
     
     public RestMessage<Void> head() throws RestClientException {
-      return getRestClient().doRequest(new Request(this, RestMethod.HEAD), Void.class);
+      return execute(RestMethod.HEAD, Void.class);
     }
     
     public <R> RestMessage<R> delete(Class<R> entityClass) throws RestClientException {
-      return getRestClient().doRequest(new Request(this, RestMethod.DELETE), entityClass);
+      return execute(RestMethod.DELETE, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, String> rrd,
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return getRestClient().doRequest(new Request(this, RestMethod.DELETE), rrd, strategy);
+      return execute(RestMethod.DELETE, rrd, strategy);
+    }
+    
+    public <E> BaseRestResponseResult<E, String> delete(SimpleRestResponseDecoder<E> rrd)
+        throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+      return execute(RestMethod.DELETE, rrd);
     }
     
     public <R> RestMessage<R> execute(RestMethod restMethod, Class<R> entityClass) throws RestClientException {
-      return getRestClient().doRequest(new Request(this, restMethod), entityClass);
+      return getRestClient().doRequest(new Request<T>(this, restMethod), entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<String>> RestResponseResultType execute(RestMethod restMethod, RestResponseDecoder<RestResponseResultType, String> rrd,
+    public <E> BaseRestResponseResult<E, String> execute(RestMethod restMethod, RestResponseDecoder<BaseRestResponseResult<E, String>, E, String> rrd)
+        throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+      return execute(restMethod, rrd, null);
+    }
+    
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(RestMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return getRestClient().doRequest(new Request(this, restMethod), rrd, strategy);
+      return getRestClient().doRequest(new Request<T>(this, restMethod), rrd, strategy);
     }
   }
 }

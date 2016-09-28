@@ -2,13 +2,12 @@ package it.reply.utils.web.ws.rest.restclient.auth;
 
 import it.reply.utils.web.ws.rest.restclient.Request;
 
-import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 public class Oauth2AuthorizationContext implements AuthorizationContext {
@@ -140,10 +139,10 @@ public class Oauth2AuthorizationContext implements AuthorizationContext {
   }
 
   @Override
-  public void intercept(Request request) {
+  public void intercept(Request<?> request) {
     MultivaluedMap<String, Object> headers = request.getHeaders();
     if (headers == null) {
-      headers = new MultivaluedMapImpl<>();
+      headers = new MultivaluedHashMap<>();
       request.setHeaders(headers);
     }
     request.getHeaders().add(HttpHeaders.AUTHORIZATION, String.format("%s %s", tokenType.getTokenType(), getAccessToken()));

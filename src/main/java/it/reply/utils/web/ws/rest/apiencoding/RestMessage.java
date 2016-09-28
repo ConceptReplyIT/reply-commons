@@ -1,10 +1,10 @@
 package it.reply.utils.web.ws.rest.apiencoding;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 import com.google.common.base.MoreObjects;
 
-import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 
 /**
  * This POJO holds a Rest Message (HttpStatusCode, Headers and Body).
@@ -13,7 +13,7 @@ import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
  */
 public class RestMessage<E> {
 
-	private MultivaluedMap<String, Object> headers = new MultivaluedMapImpl<String, Object>();
+	private MultivaluedMap<String, Object> headers = new MultivaluedHashMap<String, Object>();
 	private E body;
 	private int httpStatusCode;
 

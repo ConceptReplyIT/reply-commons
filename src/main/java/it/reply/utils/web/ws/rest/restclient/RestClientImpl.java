@@ -24,8 +24,8 @@ public class RestClientImpl extends AbstractRestClient {
   private Logger LOG = LoggerFactory.getLogger(RestClientImpl.class);
   
 	@Override
-  public <R> RestMessage<R> doRequest(Request request,
-      Class<R> entityClass) throws RestClientException {
+  public <B, R> RestMessage<R> doRequest(Request<B> request, Class<R> entityClass)
+      throws RestClientException {
 
 	  if (getRequestInserceptors() != null) {
   	  for (RequestInterceptor interceptor : getRequestInserceptors()) {
@@ -100,7 +100,7 @@ public class RestClientImpl extends AbstractRestClient {
             if (entry.getValue() != null) {
               params = entry.getValue().toArray();
             }
-            target.queryParam(entry.getKey(), params);
+            target = target.queryParam(entry.getKey(), params);
           }
         }
   

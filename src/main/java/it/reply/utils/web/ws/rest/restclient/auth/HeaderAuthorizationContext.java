@@ -2,11 +2,9 @@ package it.reply.utils.web.ws.rest.restclient.auth;
 
 import it.reply.utils.web.ws.rest.restclient.Request;
 
-import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
-
 import java.util.Objects;
 
-import javax.ws.rs.client.Invocation.Builder;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
 public class HeaderAuthorizationContext implements AuthorizationContext {
@@ -40,10 +38,10 @@ public class HeaderAuthorizationContext implements AuthorizationContext {
   }
 
   @Override
-  public void intercept(Request request) {
+  public void intercept(Request<?> request) {
     MultivaluedMap<String, Object> headers = request.getHeaders();
     if (headers == null) {
-      headers = new MultivaluedMapImpl<>();
+      headers = new MultivaluedHashMap<>();
       request.setHeaders(headers);
     }
     headers.add(getHeaderKey(), getHeaderValue());

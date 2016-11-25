@@ -19,27 +19,27 @@ import javax.ws.rs.core.MediaType;
  * 
  */
 public abstract class BaseRestResponseDecoder<RestResponseResult extends BaseRestResponseResult<R, String>, R> implements
-		RestResponseDecoder<BaseRestResponseResult<R, String>, R, String> {
+		RestResponseDecoder<RestResponseResult, R, String> {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseRestResponseDecoder.class);
   
-	protected RestResponseDecodeStrategy defaultDecodeStrategy;
+	protected RestResponseDecodeStrategy<String> defaultDecodeStrategy;
 
 	public BaseRestResponseDecoder() {
 		super();
 	}
 
 	public BaseRestResponseDecoder(
-			RestResponseDecodeStrategy defaultDecodeStrategy) {
+			RestResponseDecodeStrategy<String> defaultDecodeStrategy) {
 		this.defaultDecodeStrategy = defaultDecodeStrategy;
 	}
 
-	public RestResponseDecodeStrategy getDefaultDecodeStrategy() {
+	public RestResponseDecodeStrategy<String> getDefaultDecodeStrategy() {
 		return defaultDecodeStrategy;
 	}
 
 	public void setDefaultDecodeStrategy(
-			RestResponseDecodeStrategy defaultDecodeStrategy) {
+			RestResponseDecodeStrategy<String> defaultDecodeStrategy) {
 		this.defaultDecodeStrategy = defaultDecodeStrategy;
 	}
 
@@ -64,5 +64,10 @@ public abstract class BaseRestResponseDecoder<RestResponseResult extends BaseRes
 	    if (!hasMediatypeJson) {
 	      throw new MappingException("Not JSON encoded body.", null, msg);
 	    }
+	  }
+	 
+	  @Override
+	  public Class<String> getDecodableClass() {
+	    return String.class;
 	  }
 }

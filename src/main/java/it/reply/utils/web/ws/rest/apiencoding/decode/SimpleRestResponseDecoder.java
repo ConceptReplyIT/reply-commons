@@ -3,6 +3,7 @@ package it.reply.utils.web.ws.rest.apiencoding.decode;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
+import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 
 import com.fasterxml.jackson.databind.JavaType;
@@ -22,16 +23,18 @@ public abstract class SimpleRestResponseDecoder<APIResponseType> extends
 BaseRestResponseDecoder<BaseRestResponseResult<APIResponseType, String>, APIResponseType>
 {
 
+  @SuppressWarnings("unused")
   private static Logger LOG = LoggerFactory.getLogger(SimpleRestResponseDecoder.class);
   
   protected boolean checkMediaType;
+
+  public SimpleRestResponseDecoder(boolean checkMediaType) {
+    super();
+    this.checkMediaType = checkMediaType;
+  }
   
   public SimpleRestResponseDecoder() {
     this(true);
-  }
-  
-  public SimpleRestResponseDecoder(boolean checkMediaType) {
-    this.checkMediaType = checkMediaType;
   }
   
   private TypeToken<APIResponseType> type = new TypeToken<APIResponseType>(getClass()) {
@@ -42,18 +45,30 @@ BaseRestResponseDecoder<BaseRestResponseResult<APIResponseType, String>, APIResp
     return type;
   }
   
+  public <X> SimpleRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
+      TypeToken<X> typeArg) {
+    this.type = type.where(typeParam, typeArg);
+    return this;
+  }
+  
+  public <X> SimpleRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
+      Class<X> typeArg) {
+    this.type = type.where(typeParam, typeArg);
+    return this;
+  }
+  
   @Override
-  public RestResponseDecodeStrategy getDefaultDecodeStrategy() {
+  public RestResponseDecodeStrategy<String> getDefaultDecodeStrategy() {
     throw new UnsupportedOperationException("RestResponseDecodeStrategy are not supported");
   }
 
   @Override
-  public void setDefaultDecodeStrategy(RestResponseDecodeStrategy defaultDecodeStrategy) {
+  public void setDefaultDecodeStrategy(RestResponseDecodeStrategy<String> defaultDecodeStrategy) {
     throw new UnsupportedOperationException("RestResponseDecodeStrategy are not supported");
   }
 
   @Override
-  public BaseRestResponseResult<APIResponseType, String> decode(RestMessage<String> msg, RestResponseDecodeStrategy strategy)
+  public BaseRestResponseResult<APIResponseType, String> decode(RestMessage<String> msg, RestResponseDecodeStrategy<String> strategy)
       throws NoMappingModelFoundException, MappingException, ServerErrorResponseException {
     if (strategy != null) { 
       throw new UnsupportedOperationException("RestResponseDecodeStrategy are not supported");

@@ -2,6 +2,8 @@ package it.reply.utils.web.ws.rest.apiclients.prisma;
 
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * Exception representing that the API returned an error status. <br/>
  * The original {@link RestMessage} is embedded for inspection.
@@ -16,10 +18,10 @@ public class APIErrorException extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 3965412299072282395L;
 
-	private RestMessage responseMessage;
+	private RestMessage<?> responseMessage;
 	private it.reply.domain.dsl.prisma.restprotocol.Error APIError;
 
-	public RestMessage getResponseMessage() {
+	public RestMessage<?> getResponseMessage() {
 		return responseMessage;
 	}
 
@@ -40,7 +42,7 @@ public class APIErrorException extends RuntimeException {
 	}
 
 	public APIErrorException(String msg, Throwable t,
-			RestMessage responseMessage, it.reply.domain.dsl.prisma.restprotocol.Error APIError) {
+			RestMessage<?> responseMessage, it.reply.domain.dsl.prisma.restprotocol.Error APIError) {
 		super(msg, t);
 		this.responseMessage = responseMessage;
 		this.APIError = APIError;
@@ -52,7 +54,7 @@ public class APIErrorException extends RuntimeException {
 
 	@Override
 	public String toString() {
-		return "APIErrorException [responseMessage=" + responseMessage
-				+ ", APIError=" + APIError + "]";
+	  return new ToStringBuilder(this).appendSuper(super.toString())
+	      .append("responseMessage", responseMessage).append("APIError", APIError).toString();
 	}
 }

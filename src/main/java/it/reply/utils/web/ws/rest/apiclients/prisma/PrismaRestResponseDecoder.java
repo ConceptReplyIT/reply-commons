@@ -6,15 +6,18 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.StatusType;
 
+import com.google.common.reflect.TypeParameter;
+import com.google.common.reflect.TypeToken;
+
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import it.reply.domain.dsl.prisma.restprotocol.PrismaResponseWrapper;
 import it.reply.utils.web.ws.rest.apiencoding.MappingException;
 import it.reply.utils.web.ws.rest.apiencoding.NoMappingModelFoundException;
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
 import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseDecoder;
-import it.reply.utils.web.ws.rest.apiencoding.decode.BaseRestResponseResult;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 
 /**
@@ -24,31 +27,43 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
  * @author l.biava
  * 
  */
-public class PrismaRestResponseDecoder<APIResponseType> extends
-		BaseRestResponseDecoder<BaseRestResponseResult<Object, String>, Object> {
+public abstract class PrismaRestResponseDecoder<APIResponseType> extends
+		BaseRestResponseDecoder<PrismaRestResponseResult<APIResponseType>, PrismaResponseWrapper<APIResponseType>> {
+  
+  private TypeToken<APIResponseType> type = new TypeToken<APIResponseType>(getClass()) {
+    private static final long serialVersionUID = 1L;
+  };
 
-	public PrismaRestResponseDecoder(JavaType targetClass) {
+  protected TypeToken<APIResponseType> getType() {
+    return type;
+  }
+  
+	public PrismaRestResponseDecoder() {
 		super();
-		this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(targetClass);
+		this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(getType());
 	}
 	
-	public PrismaRestResponseDecoder(Class<APIResponseType> c) {
-		super();
-		this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(c);
-	}
-
-	public PrismaRestResponseDecoder(@SuppressWarnings("rawtypes") Class... c) {
-		super();
-		this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(c);
-	}
-
+  public <X> PrismaRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
+      TypeToken<X> typeArg) {
+    this.type = type.where(typeParam, typeArg);
+    this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(getType());
+    return this;
+  }
+	
+  public <X> PrismaRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
+      Class<X> typeArg) {
+    this.type = type.where(typeParam, typeArg);
+    this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(getType());
+    return this;
+  }
+	 
 	/**
 	 * <b>Supports only default strategy. MUST pass null in strategy field !</b><br/>
 	 * {@inheritDoc}
 	 */
 	@Override
-	public BaseRestResponseResult<Object, String> decode(RestMessage<String> msg,
-			RestResponseDecodeStrategy strategy)
+	public PrismaRestResponseResult<APIResponseType> decode(RestMessage<String> msg,
+			RestResponseDecodeStrategy<String> strategy)
 			throws NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
 
@@ -60,7 +75,7 @@ public class PrismaRestResponseDecoder<APIResponseType> extends
 	}
 
 	@Override
-	public BaseRestResponseResult<Object, String> decode(RestMessage<String> msg)
+	public PrismaRestResponseResult<APIResponseType> decode(RestMessage<String> msg)
 			throws NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException {
 
@@ -73,7 +88,7 @@ public class PrismaRestResponseDecoder<APIResponseType> extends
 						.equals(MediaType.APPLICATION_JSON))
 			throw new MappingException("Not JSON encoded body.", null, msg);
 
-		Object result = null;
+		PrismaResponseWrapper<APIResponseType> result = null;
 		if (msg.getBody() != null)
 		{
 			try {
@@ -83,7 +98,7 @@ public class PrismaRestResponseDecoder<APIResponseType> extends
 			}
 		}
 		
-		return new BaseRestResponseResult<Object, String>(status, result, mappingClass, msg);
+		return new PrismaRestResponseResult<APIResponseType>(status, result, mappingClass, msg);
 	}
 
 }

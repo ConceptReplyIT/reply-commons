@@ -145,7 +145,7 @@ public class RestClientImpl extends AbstractRestClient {
         }
   
         RestMessage<R> msg;
-        if (entityClass != null) {
+        if (entityClass != null && !entityClass.equals(Void.class)) {
           try {
             msg = new RestMessage<R>(response.getHeaders(), response.readEntity(entityClass), response.getStatus());
           } catch (Exception e) {

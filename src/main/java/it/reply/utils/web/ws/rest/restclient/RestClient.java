@@ -72,10 +72,10 @@ public interface RestClient {
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType getRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, O> RestResponseResultType getRequest(String URL,
 			MultivaluedMap<String, Object> headers, Request.Options reqOptions,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -84,10 +84,10 @@ public interface RestClient {
 	 * {@link RestClient#getRequest(String, MultivaluedMap, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy )}
 	 * . Without RequestOptions param.
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType getRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, O> RestResponseResultType getRequest(String URL,
 			MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -175,11 +175,11 @@ public interface RestClient {
 	 *             if the server responded with a custom error not using the
 	 *             application protocolo (ie. 404)
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType postRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<B> body,
 			MediaType bodyMediaType, Request.Options reqOptions,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -188,11 +188,11 @@ public interface RestClient {
 	 * {@link RestClient#postRequest(String, MultivaluedMap, GenericEntity, MediaType, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * Without RequestOptions param.
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType postRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType postRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<B> body,
 			MediaType bodyMediaType,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -260,11 +260,11 @@ public interface RestClient {
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType putRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<B> body,
 			MediaType bodyMediaType, Request.Options reqOptions,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -273,11 +273,11 @@ public interface RestClient {
 	 * {@link RestClient#putRequest(String, MultivaluedMap, GenericEntity, MediaType, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * . Without RequestOptions param.
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType putRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType putRequest(String URL,
 			MultivaluedMap<String, Object> headers, GenericEntity<B> body,
 			MediaType bodyMediaType,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -340,11 +340,11 @@ public interface RestClient {
 	 *             if the server responded with a custom error not using the
 	 *             application protocol (ie. 404)
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType deleteRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, O> RestResponseResultType deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers,
 			Request.Options reqOptions,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -353,10 +353,10 @@ public interface RestClient {
 	 * {@link RestClient#deleteRequest(String, MultivaluedMap, RequestOptions, RestResponseDecoder, RestResponseDecodeStrategy)}
 	 * . Without RequestOptions param.
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R> RestResponseResultType deleteRequest(String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, O> RestResponseResultType deleteRequest(String URL,
 			MultivaluedMap<String, Object> headers,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 
@@ -391,13 +391,13 @@ public interface RestClient {
 	/**
 	 * 	
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType doRequest(Request.RestMethod method, String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType doRequest(Request.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<B> body,
 			MediaType bodyMediaType,
 			Request.Options reqOptions,
-			RestResponseDecoder<RestResponseResultType, R, String> rrd,
-			RestResponseDecodeStrategy strategy) throws RestClientException,
+			RestResponseDecoder<RestResponseResultType, R, O> rrd,
+			RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 	
@@ -407,14 +407,14 @@ public interface RestClient {
 			MediaType bodyMediaType,
 			Request.Options reqOptions) throws RestClientException;
 	
-	public <B, E> RestMessage<E> doRequest(Request.RestMethod method, String URL,
+	public <B, O> RestMessage<O> doRequest(Request.RestMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<B> body,
 			MediaType bodyMediaType,
-			Request.Options reqOptions, Class<E> entityClass) throws RestClientException;
+			Request.Options reqOptions, Class<O> entityClass) throws RestClientException;
 	
-	public <B, R> RestMessage<R> doRequest(Request<B> request, Class<R> entityClass) throws RestClientException;
+	public <B, O> RestMessage<O> doRequest(Request<B> request, Class<O> entityClass) throws RestClientException;
 	
-	public <RestResponseResultType extends BaseRestResponseResult<R, String>, R, B> RestResponseResultType doRequest(Request<B> request, RestResponseDecoder<RestResponseResultType, R ,String> rrd,
-      RestResponseDecodeStrategy strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException;
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType doRequest(Request<B> request, RestResponseDecoder<RestResponseResultType, R , O> rrd,
+      RestResponseDecodeStrategy<O> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException;
 }

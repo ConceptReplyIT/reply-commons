@@ -2,26 +2,23 @@ package it.reply.utils.web.ws.rest.apiclients.prisma;
 
 import it.reply.domain.dsl.prisma.restprotocol.Meta;
 import it.reply.domain.dsl.prisma.restprotocol.PrismaResponseWrapper;
+import it.reply.utils.web.ws.rest.apiencoding.MetaData;
 
-public class PrismaMetaData extends MetaData {
+public class PrismaMetaData<APIResponseType> extends
+    MetaData<PrismaRestResponseResult<APIResponseType>, PrismaResponseWrapper<APIResponseType>, String> {
 
-    private PrismaResponseWrapper<?> prismaResponseWrapper;
-    private Meta meta;
+  public PrismaResponseWrapper<APIResponseType> getPrismaResponseWrapper() {
+    return this.getRestResponseResult() != null ? this.getRestResponseResult().getResult() : null;
+  }
 
-    public PrismaResponseWrapper<?> getPrismaResponseWrapper() {
-	return prismaResponseWrapper;
-    }
+  @Override
+  public Meta getMeta() {
+    return getPrismaResponseWrapper() != null ? getPrismaResponseWrapper().getMeta() : null;
+  }
 
-    public void setPrismaResponseWrapper(PrismaResponseWrapper<?> prismaResponseWrapper) {
-	this.prismaResponseWrapper = prismaResponseWrapper;
-    }
-
-    public Meta getMeta() {
-	return meta;
-    }
-
-    public void setMeta(Meta meta) {
-	this.meta = meta;
-    }
+  @Override
+  public void setMeta(Meta meta) {
+    throw new UnsupportedOperationException("Meta are retrieved from ResponseWrapper");
+  }
 
 }

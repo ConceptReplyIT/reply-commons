@@ -27,7 +27,7 @@ public class HeaderAuthorizationContext implements AuthorizationContext {
     return headerValue;
   }
 
-  private void setHeaderKey(String headerKey) {
+  protected void setHeaderKey(String headerKey) {
     Objects.requireNonNull(headerKey, "headerKey must not be null");
     this.headerKey = headerKey;
   }

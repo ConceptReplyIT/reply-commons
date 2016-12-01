@@ -265,12 +265,12 @@ public class Request<T> implements Serializable {
       return execute(HttpMethod.GET, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, String> rrd,
-        RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, R> rrd,
+        RestResponseDecodeStrategy<R> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(HttpMethod.GET, rrd, strategy);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, String> rrd)
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, R> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(HttpMethod.GET, rrd);
     }
@@ -279,12 +279,12 @@ public class Request<T> implements Serializable {
       return execute(HttpMethod.POST, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, String> rrd,
-        RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, R> rrd,
+        RestResponseDecodeStrategy<R> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(HttpMethod.POST, rrd, strategy);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, String> rrd)
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, R> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return post(rrd, null);
     }
@@ -293,12 +293,12 @@ public class Request<T> implements Serializable {
       return execute(HttpMethod.PUT, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, String> rrd,
-        RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, R> rrd,
+        RestResponseDecodeStrategy<R> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(HttpMethod.PUT, rrd, strategy);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, String> rrd)
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, R> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return put(rrd, null);
     }
@@ -311,12 +311,12 @@ public class Request<T> implements Serializable {
       return execute(HttpMethod.DELETE, entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, String> rrd,
-        RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, R> rrd,
+        RestResponseDecodeStrategy<R> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(HttpMethod.DELETE, rrd, strategy);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, String> rrd)
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, R> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return delete(rrd, null);
     }
@@ -325,13 +325,13 @@ public class Request<T> implements Serializable {
       return getRestClient().doRequest(generateRequest(restMethod), entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(HttpMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd)
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType execute(HttpMethod restMethod, RestResponseDecoder<RestResponseResultType, E, R> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(restMethod, rrd, null);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(HttpMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd,
-        RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
+    public <RestResponseResultType extends BaseRestResponseResult<E, R>, E, R> RestResponseResultType execute(HttpMethod restMethod, RestResponseDecoder<RestResponseResultType, E, R> rrd,
+        RestResponseDecodeStrategy<R> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return getRestClient().doRequest(generateRequest(restMethod), rrd, strategy);
     }
     

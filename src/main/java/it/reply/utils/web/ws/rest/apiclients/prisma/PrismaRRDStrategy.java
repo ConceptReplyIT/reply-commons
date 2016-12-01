@@ -5,8 +5,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
-import org.javatuples.Pair;
-
 import com.google.common.reflect.TypeToken;
 
 import com.fasterxml.jackson.databind.JavaType;

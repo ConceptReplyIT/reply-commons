@@ -391,7 +391,7 @@ public interface RestClient {
 	/**
 	 * 	
 	 */
-	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType doRequest(Request.RestMethod method, String URL,
+	public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType doRequest(Request.HttpMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<B> body,
 			MediaType bodyMediaType,
@@ -401,13 +401,13 @@ public interface RestClient {
 			NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 	
-	public <B> RestMessage<String> doRequest(Request.RestMethod method, String URL,
+	public <B> RestMessage<String> doRequest(Request.HttpMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<B> body,
 			MediaType bodyMediaType,
 			Request.Options reqOptions) throws RestClientException;
 	
-	public <B, O> RestMessage<O> doRequest(Request.RestMethod method, String URL,
+	public <B, O> RestMessage<O> doRequest(Request.HttpMethod method, String URL,
 			MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, 
 			GenericEntity<B> body,
 			MediaType bodyMediaType,

@@ -26,7 +26,7 @@ public class Request<T> implements Serializable {
   
   private static final long serialVersionUID = -7369063656963527676L;
   
-  public enum RestMethod {
+  public enum HttpMethod {
     GET, POST, PUT, DELETE, HEAD;
   }
   
@@ -95,7 +95,7 @@ public class Request<T> implements Serializable {
     }
   }
   
-  private RestMethod method;
+  private HttpMethod method;
   private String URL;
   private MultivaluedMap<String, Object> headers;
   private MultivaluedMap<String, Object> queryParams; 
@@ -103,12 +103,12 @@ public class Request<T> implements Serializable {
   private MediaType bodyMediaType;
   private Request.Options reqOptions;
   
-  public Request(RestMethod method, String url) {
+  public Request(HttpMethod method, String url) {
     setMethod(method);
     setURL(url);
   }
   
-  public Request(RequestBuilder<?> builder, RestMethod method) {
+  public Request(RequestBuilder<?> builder, HttpMethod method) {
     setMethod(method);
     setURL(builder.getUrl());
     setHeaders(builder.getHeaders());
@@ -116,7 +116,7 @@ public class Request<T> implements Serializable {
     setReqOptions(builder.getReqOptions());
   }
   
-  public Request(RequestWithBodyBuilder<T> builder, RestMethod method) {
+  public Request(RequestWithBodyBuilder<T> builder, HttpMethod method) {
     this((RequestBuilder<?>)builder, method);
     Entity<GenericEntity<T>> body = builder.getBody();
     if (body != null) {
@@ -125,7 +125,7 @@ public class Request<T> implements Serializable {
     }
   }
   
-  public RestMethod getMethod() {
+  public HttpMethod getMethod() {
     return method;
   }
   public String getURL() {
@@ -146,7 +146,7 @@ public class Request<T> implements Serializable {
   public Request.Options getReqOptions() {
     return reqOptions;
   }
-  public void setMethod(RestMethod method) {
+  public void setMethod(HttpMethod method) {
     Objects.requireNonNull(method, "method must not be null");
     this.method = method;
   }
@@ -262,26 +262,26 @@ public class Request<T> implements Serializable {
     }
     
     public <R> RestMessage<R> get(Class<R> entityClass) throws RestClientException {
-      return execute(RestMethod.GET, entityClass);
+      return execute(HttpMethod.GET, entityClass);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return execute(RestMethod.GET, rrd, strategy);
+      return execute(HttpMethod.GET, rrd, strategy);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType get(RestResponseDecoder<RestResponseResultType, E, String> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return execute(RestMethod.GET, rrd);
+      return execute(HttpMethod.GET, rrd);
     }
     
     public <R> RestMessage<R> post(Class<R> entityClass) throws RestClientException {
-      return execute(RestMethod.POST, entityClass);
+      return execute(HttpMethod.POST, entityClass);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return execute(RestMethod.POST, rrd, strategy);
+      return execute(HttpMethod.POST, rrd, strategy);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType post(RestResponseDecoder<RestResponseResultType, E, String> rrd)
@@ -290,12 +290,12 @@ public class Request<T> implements Serializable {
     }
     
     public <R> RestMessage<R> put(Class<R> entityClass) throws RestClientException {
-      return execute(RestMethod.PUT, entityClass);
+      return execute(HttpMethod.PUT, entityClass);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return execute(RestMethod.PUT, rrd, strategy);
+      return execute(HttpMethod.PUT, rrd, strategy);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType put(RestResponseDecoder<RestResponseResultType, E, String> rrd)
@@ -304,16 +304,16 @@ public class Request<T> implements Serializable {
     }
     
     public RestMessage<Void> head() throws RestClientException {
-      return execute(RestMethod.HEAD, Void.class);
+      return execute(HttpMethod.HEAD, Void.class);
     }
     
     public <R> RestMessage<R> delete(Class<R> entityClass) throws RestClientException {
-      return execute(RestMethod.DELETE, entityClass);
+      return execute(HttpMethod.DELETE, entityClass);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
-      return execute(RestMethod.DELETE, rrd, strategy);
+      return execute(HttpMethod.DELETE, rrd, strategy);
     }
     
     public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType delete(RestResponseDecoder<RestResponseResultType, E, String> rrd)
@@ -321,21 +321,21 @@ public class Request<T> implements Serializable {
       return delete(rrd, null);
     }
     
-    public <R> RestMessage<R> execute(RestMethod restMethod, Class<R> entityClass) throws RestClientException {
+    public <R> RestMessage<R> execute(HttpMethod restMethod, Class<R> entityClass) throws RestClientException {
       return getRestClient().doRequest(generateRequest(restMethod), entityClass);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(RestMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd)
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(HttpMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd)
         throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return execute(restMethod, rrd, null);
     }
     
-    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(RestMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd,
+    public <RestResponseResultType extends BaseRestResponseResult<E, String>, E> RestResponseResultType execute(HttpMethod restMethod, RestResponseDecoder<RestResponseResultType, E, String> rrd,
         RestResponseDecodeStrategy<String> strategy) throws RestClientException, NoMappingModelFoundException, MappingException, ServerErrorResponseException {
       return getRestClient().doRequest(generateRequest(restMethod), rrd, strategy);
     }
     
-    protected Request<?> generateRequest(RestMethod restMethod) {
+    protected Request<?> generateRequest(HttpMethod restMethod) {
       return new Request<Void>(this, restMethod); 
     }
   }
@@ -364,7 +364,7 @@ public class Request<T> implements Serializable {
     }
        
     @Override
-    protected Request<?> generateRequest(RestMethod restMethod) {
+    protected Request<?> generateRequest(HttpMethod restMethod) {
       return new Request<T>(this, restMethod); 
     }
   }

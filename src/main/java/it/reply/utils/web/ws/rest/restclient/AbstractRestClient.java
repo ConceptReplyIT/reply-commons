@@ -76,7 +76,7 @@ public abstract class AbstractRestClient
 	    RestResponseDecodeStrategy<O> strategy) throws RestClientException, NoMappingModelFoundException,
 	    MappingException, ServerErrorResponseException {
 
-	  RestMessage<O> msg = doRequest(Request.RestMethod.GET, URL, headers, null, null, null, reqOptions, rrd.getDecodableClass());
+	  RestMessage<O> msg = doRequest(Request.HttpMethod.GET, URL, headers, null, null, null, reqOptions, rrd.getDecodableClass());
 
 	  return rrd.decode(msg, strategy);
 	}
@@ -85,7 +85,7 @@ public abstract class AbstractRestClient
 	public RestMessage<String> getRequest(String URL, MultivaluedMap<String, Object> headers,
 	    Request.Options reqOptions) throws RestClientException {
 
-	  return doRequest(Request.RestMethod.GET, URL, headers, null, null, null, reqOptions);
+	  return doRequest(Request.HttpMethod.GET, URL, headers, null, null, null, reqOptions);
 	}
 	
 	/***************************** HEAD Requests ******************************/
@@ -101,7 +101,7 @@ public abstract class AbstractRestClient
 	public RestMessage<Void> headRequest(String URL, MultivaluedMap<String, Object> headers,
 	    Request.Options reqOptions) throws RestClientException {
 
-	  return doRequest(Request.RestMethod.HEAD, URL, headers, null, null, null, reqOptions, Void.class);
+	  return doRequest(Request.HttpMethod.HEAD, URL, headers, null, null, null, reqOptions, Void.class);
 	}
 	
 	/***************************** POST Requests ******************************/
@@ -133,7 +133,7 @@ public abstract class AbstractRestClient
 	    RestResponseDecoder<RestResponseResultType, R, O> rrd, RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 	    NoMappingModelFoundException, MappingException, ServerErrorResponseException {
 
-	  RestMessage<O> msg = doRequest(Request.RestMethod.POST, URL, headers, null, body, bodyMediaType, reqOptions, rrd.getDecodableClass());
+	  RestMessage<O> msg = doRequest(Request.HttpMethod.POST, URL, headers, null, body, bodyMediaType, reqOptions, rrd.getDecodableClass());
 	  // System.out.println(msg.getBody().toString());
 	  return rrd.decode(msg, strategy);
 	}
@@ -143,7 +143,7 @@ public abstract class AbstractRestClient
 	    MediaType bodyMediaType, Request.Options reqOptions)
 	    throws RestClientException {
 
-	  return doRequest(Request.RestMethod.POST, URL, headers, null, body, bodyMediaType, reqOptions);
+	  return doRequest(Request.HttpMethod.POST, URL, headers, null, body, bodyMediaType, reqOptions);
 	}
 	
 	/***************************** PUT Requests ******************************/
@@ -173,7 +173,7 @@ public abstract class AbstractRestClient
 	    RestResponseDecoder<RestResponseResultType, R, O> rrd, RestResponseDecodeStrategy<O> strategy) throws RestClientException,
 	    NoMappingModelFoundException, MappingException, ServerErrorResponseException {
 
-	  RestMessage<O> msg = doRequest(Request.RestMethod.PUT, URL, headers, null, body, bodyMediaType, reqOptions, rrd.getDecodableClass());
+	  RestMessage<O> msg = doRequest(Request.HttpMethod.PUT, URL, headers, null, body, bodyMediaType, reqOptions, rrd.getDecodableClass());
 	  return rrd.decode(msg, strategy);
 	}
 
@@ -182,7 +182,7 @@ public abstract class AbstractRestClient
 	    MediaType bodyMediaType, Request.Options reqOptions)
 	    throws RestClientException {
 
-	  return doRequest(Request.RestMethod.PUT, URL, headers, null, body, bodyMediaType, reqOptions);
+	  return doRequest(Request.HttpMethod.PUT, URL, headers, null, body, bodyMediaType, reqOptions);
 	}
 	
 	/***************************** DELETE Requests ******************************/
@@ -210,7 +210,7 @@ public abstract class AbstractRestClient
       RestResponseDecoder<RestResponseResultType, R, O> rrd, RestResponseDecodeStrategy<O> strategy) throws RestClientException,
       NoMappingModelFoundException, MappingException, ServerErrorResponseException {
   
-    RestMessage<O> msg = doRequest(Request.RestMethod.DELETE, URL, headers, null, null, null, reqOptions, rrd.getDecodableClass());
+    RestMessage<O> msg = doRequest(Request.HttpMethod.DELETE, URL, headers, null, null, null, reqOptions, rrd.getDecodableClass());
   
     return rrd.decode(msg, strategy);
   }
@@ -219,13 +219,13 @@ public abstract class AbstractRestClient
   public RestMessage<String> deleteRequest(String URL, MultivaluedMap<String, Object> headers, 
       Request.Options reqOptions) throws RestClientException {
   
-    return doRequest(Request.RestMethod.DELETE, URL, headers, null, null, null, reqOptions);
+    return doRequest(Request.HttpMethod.DELETE, URL, headers, null, null, null, reqOptions);
   }
   
   /***************************** Generic Requests ******************************/
 
   @Override
-  public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType doRequest(Request.RestMethod method, String URL,
+  public <RestResponseResultType extends BaseRestResponseResult<R, O>, R, B, O> RestResponseResultType doRequest(Request.HttpMethod method, String URL,
       MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<B> body,
       MediaType bodyMediaType, Request.Options reqOptions,
       RestResponseDecoder<RestResponseResultType, R, O> rrd, RestResponseDecodeStrategy<O> strategy) throws RestClientException,
@@ -236,7 +236,7 @@ public abstract class AbstractRestClient
   }
 
   @Override
-  public <T> RestMessage<String> doRequest(Request.RestMethod method, String URL, MultivaluedMap<String, Object> headers,
+  public <T> RestMessage<String> doRequest(Request.HttpMethod method, String URL, MultivaluedMap<String, Object> headers,
       MultivaluedMap<String, Object> queryParams, GenericEntity<T> body, MediaType bodyMediaType,
       Request.Options reqOptions) throws RestClientException {
 
@@ -245,7 +245,7 @@ public abstract class AbstractRestClient
   }
 
   @Override
-  public <B, E> RestMessage<E> doRequest(Request.RestMethod method, String URL,
+  public <B, E> RestMessage<E> doRequest(Request.HttpMethod method, String URL,
       MultivaluedMap<String, Object> headers, MultivaluedMap<String, Object> queryParams, GenericEntity<B> body,
       MediaType bodyMediaType, Request.Options reqOptions,
       Class<E> entityClass) throws RestClientException {

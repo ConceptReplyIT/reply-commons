@@ -52,6 +52,11 @@ public abstract class AbstractRestClient
 	  return new RequestBuilder<>(this, url); 
 	}
 	
+  @Override
+  public RequestBuilder<?> request(String url, Object...parameters) {
+    return new RequestBuilder<>(this, url, parameters);
+  }
+	
 	/***************************** GET Requests ******************************/
 
 	@Override

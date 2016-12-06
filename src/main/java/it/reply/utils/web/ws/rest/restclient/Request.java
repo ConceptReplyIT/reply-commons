@@ -21,6 +21,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriBuilder;
 
 public class Request<T> implements Serializable {
   
@@ -96,7 +97,7 @@ public class Request<T> implements Serializable {
   }
   
   private HttpMethod method;
-  private String URL;
+  private String url;
   private MultivaluedMap<String, Object> headers;
   private MultivaluedMap<String, Object> queryParams; 
   private GenericEntity<T> body;
@@ -105,12 +106,12 @@ public class Request<T> implements Serializable {
   
   public Request(HttpMethod method, String url) {
     setMethod(method);
-    setURL(url);
+    setUrl(url);
   }
   
   public Request(RequestBuilder<?> builder, HttpMethod method) {
     setMethod(method);
-    setURL(builder.getUrl());
+    setUrl(builder.getUrl());
     setHeaders(builder.getHeaders());
     setQueryParams(builder.getQueryParams());
     setReqOptions(builder.getReqOptions());
@@ -128,8 +129,8 @@ public class Request<T> implements Serializable {
   public HttpMethod getMethod() {
     return method;
   }
-  public String getURL() {
-    return URL;
+  public String getUrl() {
+    return url;
   }
   public MultivaluedMap<String, Object> getHeaders() {
     return headers;
@@ -150,9 +151,9 @@ public class Request<T> implements Serializable {
     Objects.requireNonNull(method, "method must not be null");
     this.method = method;
   }
-  public void setURL(String url) {
+  public void setUrl(String url) {
     Objects.requireNonNull(url, "url must not be null");
-    URL = url;
+    this.url = url;
   }
   public void setHeaders(MultivaluedMap<String, Object> headers) {
     this.headers = headers;
@@ -184,6 +185,17 @@ public class Request<T> implements Serializable {
       this.url = url;
     }
     
+    public RequestBuilder(RestClient restClient, String url, Object...parameters) {
+      Objects.requireNonNull(restClient, "restClient must not be null");
+      Objects.requireNonNull(url, "url must not be null");
+      Objects.requireNonNull(parameters, "parameters must not be null");
+      for (Object parameter : parameters) {
+        Objects.requireNonNull(parameter, "parameters must not be null");
+      }
+      this.restClient = restClient;
+      this.url = UriBuilder.fromUri(url).build(parameters, false).toString();
+    }
+
     public RequestBuilder(RequestBuilder<?> otherBuilder) {
       this.restClient = otherBuilder.restClient;
       this.url = otherBuilder.url;
@@ -346,6 +358,11 @@ public class Request<T> implements Serializable {
     
     public RequestWithBodyBuilder(RestClient restClient, String url, Entity<GenericEntity<T>> body) {
       super(restClient, url);
+      this.body = body;
+    }
+    
+    public RequestWithBodyBuilder(RestClient restClient, String url, Entity<GenericEntity<T>> body, Object...parameters) {
+      super(restClient, url, parameters);
       this.body = body;
     }
     

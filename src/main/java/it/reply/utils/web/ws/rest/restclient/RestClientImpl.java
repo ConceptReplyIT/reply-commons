@@ -51,7 +51,7 @@ public class RestClientImpl extends AbstractRestClient {
       if (System.getProperty("java.net.useSystemProxies") != null
           && System.getProperty("java.net.useSystemProxies").equals("true")) {
         try {
-          URL url = new URL(request.getURL());
+          URL url = new URL(request.getUrl());
           if (!url.getAuthority().contains("localhost") && !url.getAuthority().contains("127.0.0.1")) {
             cb.defaultProxy("proxy.reply.it", 8080, "HTTP");
           }
@@ -91,7 +91,7 @@ public class RestClientImpl extends AbstractRestClient {
       client = cb.build();
       Response response = null;
       try {
-        WebTarget target = client.target(request.getURL());
+        WebTarget target = client.target(request.getUrl());
   
         // Add Query Params
         if (request.getQueryParams() != null) {

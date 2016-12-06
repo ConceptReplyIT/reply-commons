@@ -46,6 +46,8 @@ public interface RestClient {
 	
 	public RequestBuilder<?> request(String url);
 	
+  public RequestBuilder<?> request(String url, Object...parameters);
+	
 	/***************************** GET Requests ******************************/
 
 	/**

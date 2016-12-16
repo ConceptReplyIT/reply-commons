@@ -82,11 +82,7 @@ public abstract class PrismaRestResponseDecoder<APIResponseType> extends
 		StatusType status = defaultDecodeStrategy.getStatus(msg);
 		JavaType mappingClass = defaultDecodeStrategy.getModelClass(msg);
 
-		// Check also content type (application/json)
-		if (msg.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE)
-				&& !msg.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE)
-						.equals(MediaType.APPLICATION_JSON))
-			throw new MappingException("Not JSON encoded body.", null, msg);
+		checkMediaType(msg);
 
 		PrismaResponseWrapper<APIResponseType> result = null;
 		if (msg.getBody() != null)

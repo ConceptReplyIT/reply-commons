@@ -17,6 +17,9 @@ import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
 import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Generic Rest Decode strategy for Prisma Rest Protocol.
  * 
@@ -28,6 +31,8 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
 public class PrismaRRDStrategy<APIResponseType> implements
 		RestResponseDecodeStrategy<String> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(PrismaRRDStrategy.class);
+  
   private TypeToken<APIResponseType> type;
 
   protected TypeToken<APIResponseType> getType() {
@@ -50,10 +55,16 @@ public class PrismaRRDStrategy<APIResponseType> implements
 
 		JavaType clazz;
 
-		if (msg.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE))
+		if (msg.getHeaders() != null && msg.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE))
 		{
-			if (msg.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE)
-				.equals(MediaType.APPLICATION_JSON)) {
+		  String stringContentType = String.format("%s", msg.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
+		  MediaType contentType = null;
+		  try {
+		    contentType = MediaType.valueOf(stringContentType);
+		  } catch (Exception ex) {
+		    LOG.warn("Invalid content type " + stringContentType);
+		  }
+			if (MediaType.valueOf(MediaType.APPLICATION_JSON).isCompatible(contentType)) {
 				// ResponseWrapper
 				ObjectMapper mapper = new ObjectMapper();
 				clazz = mapper.getTypeFactory().constructParametricType(

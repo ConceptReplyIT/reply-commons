@@ -5,11 +5,12 @@ import java.io.InputStream;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PropertiesReader {
 
-	private static final org.apache.logging.log4j.Logger LOG = LogManager
+	private static final Logger LOG = LoggerFactory
 			.getLogger(PropertiesReader.class);
 
 	/**

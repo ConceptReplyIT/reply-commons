@@ -1,7 +1,7 @@
 package it.reply.utils.misc.polling;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Partial implementation of a basic polling behavior, always succeeding in case
@@ -18,7 +18,7 @@ public abstract class AbstractPollingBehaviour<PARAMS_TYPE, RESULT_TYPE>
 
 	protected long timeoutThreshold = 60000; // in ms
 
-	protected static final Logger LOG = LogManager.getLogger(AbstractPollingBehaviour.class);
+	protected static final Logger LOG = LoggerFactory.getLogger(AbstractPollingBehaviour.class);
 
 	public AbstractPollingBehaviour() {
 	}

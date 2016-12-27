@@ -42,14 +42,36 @@ public abstract class PrismaRestResponseDecoder<APIResponseType> extends
 		super();
 		this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(getType());
 	}
-	
+  
+	/**
+   * Allows to set the correct type for a generic that are not resolvable through reflection because
+   * of the erasure (i.e. the generic is a method type variable)
+   * 
+   * <pre>
+   * PrismaRestResponseResult{@code<List<REPRESENTATION_TYPE>>} result = getRestClient().getRequest(URL, null,
+   *     null, null, new PrismaRestResponseDecoder{@code<List<REPRESENTATION_TYPE>>}() {
+   *     }.where(new TypeParameter{@code<REPRESENTATION_TYPE>}() {
+   *     }, new TypeToken{@code<REPRESENTATION_TYPE>}(ActualRepresentationClass.class)), null);
+   * </pre>
+   */
   public <X> PrismaRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
       TypeToken<X> typeArg) {
     this.type = type.where(typeParam, typeArg);
     this.defaultDecodeStrategy = new PrismaRRDStrategy<APIResponseType>(getType());
     return this;
   }
-	
+
+  /**
+   * Allows to set the correct type for a generic that are not resolvable through reflection because
+   * of the erasure (i.e. the generic is a method type variable)
+   * 
+   * <pre>
+   * PrismaRestResponseResult{@code<List<REPRESENTATION_TYPE>>} result = getRestClient().getRequest(URL, null,
+   *     null, null, new PrismaRestResponseDecoder{@code<List<REPRESENTATION_TYPE>>}() {
+   *     }.where(new TypeParameter{@code<REPRESENTATION_TYPE>}() {
+   *     }, ActualRepresentationClass.class), null);
+   * </pre>
+   */
   public <X> PrismaRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
       Class<X> typeArg) {
     this.type = type.where(typeParam, typeArg);

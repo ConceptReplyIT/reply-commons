@@ -45,12 +45,34 @@ BaseRestResponseDecoder<BaseRestResponseResult<APIResponseType, String>, APIResp
     return type;
   }
   
+  /**
+   * Allows to set the correct type for a generic that are not resolvable through reflection because
+   * of the erasure (i.e. the generic is a method type variable)
+   * 
+   * <pre>
+   * RestResponseResult{@code<List<REPRESENTATION_TYPE>>} result = getRestClient().getRequest(URL, null,
+   *     null, null, new SimpleRestResponseDecoder{@code<List<REPRESENTATION_TYPE>>}() {
+   *     }.where(new TypeParameter{@code<REPRESENTATION_TYPE>}() {
+   *     }, new TypeToken{@code<REPRESENTATION_TYPE>}(ActualRepresentationClass.class)), null);
+   * </pre>
+   */
   public <X> SimpleRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
       TypeToken<X> typeArg) {
     this.type = type.where(typeParam, typeArg);
     return this;
   }
   
+  /**
+   * Allows to set the correct type for a generic that are not resolvable through reflection because
+   * of the erasure (i.e. the generic is a method type variable)
+   * 
+   * <pre>
+   * RestResponseResult{@code<List<REPRESENTATION_TYPE>>} result = getRestClient().getRequest(URL, null,
+   *     null, null, new SimpleRestResponseDecoder{@code<List<REPRESENTATION_TYPE>>}() {
+   *     }.where(new TypeParameter{@code<REPRESENTATION_TYPE>}() {
+   *     }, ActualRepresentationClass.class), null);
+   * </pre>
+   */
   public <X> SimpleRestResponseDecoder<APIResponseType> where(TypeParameter<X> typeParam,
       Class<X> typeArg) {
     this.type = type.where(typeParam, typeArg);

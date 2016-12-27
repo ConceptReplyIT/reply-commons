@@ -7,6 +7,10 @@ import java.util.Objects;
 
 import javax.ws.rs.core.HttpHeaders;
 
+/**
+ * AuthorizationContext that represents some HTTP Basic authentication credentials
+ *
+ */
 public class BasicAuthAuthorizationContext extends HeaderAuthorizationContext {
   
   private static final long serialVersionUID = 7320203981644117617L;

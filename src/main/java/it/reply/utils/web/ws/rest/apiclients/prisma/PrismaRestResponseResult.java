@@ -16,9 +16,4 @@ public class PrismaRestResponseResult<APIResponseType>
     super(status, result, resultClass, originalRestMessage);
   }
 
-  public PrismaRestResponseResult(StatusType status,
-      BaseRestResponseResult<PrismaResponseWrapper<APIResponseType>, String> result,
-      JavaType resultClass, RestMessage<String> originalRestMessage) {
-    super(status, (result != null ? result.getResult() : null), resultClass, originalRestMessage);
-  }
 }

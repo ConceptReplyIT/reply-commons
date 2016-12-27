@@ -13,18 +13,12 @@ import it.reply.utils.web.ws.rest.apiencoding.NoMappingModelFoundException;
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
 import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 
 
 public abstract class SimpleRestResponseDecoder<APIResponseType> extends
 BaseRestResponseDecoder<BaseRestResponseResult<APIResponseType, String>, APIResponseType>
 {
-
-  @SuppressWarnings("unused")
-  private static Logger LOG = LoggerFactory.getLogger(SimpleRestResponseDecoder.class);
   
   protected boolean checkMediaType;
 

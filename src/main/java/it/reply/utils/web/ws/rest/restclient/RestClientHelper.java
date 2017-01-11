@@ -1,5 +1,6 @@
 package it.reply.utils.web.ws.rest.restclient;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.core.GenericEntity;
@@ -62,11 +63,12 @@ public class RestClientHelper {
 			return this;
 		}
 
-		public FormDataEntityBuilder addFormData(String key, Object entity,
-				MediaType mediaType, String filename) {
+		public FormDataEntityBuilder addFormData(String key, File file,
+				MediaType mediaType) {
 			if (this.mdo == null)
 				this.create();
-			this.mdo.addFormData(key, entity, mediaType, filename);
+			String fileName = file != null ? file.getName() : null;
+			this.mdo.addFormData(key, file, mediaType, fileName);
 			return this;
 		}
 

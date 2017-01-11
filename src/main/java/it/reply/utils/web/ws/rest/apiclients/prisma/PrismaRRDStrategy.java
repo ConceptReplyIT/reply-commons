@@ -5,17 +5,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.Response.StatusType;
 
-import org.javatuples.Pair;
+import com.google.common.reflect.TypeToken;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import it.reply.domain.dsl.prisma.restprotocol.PrismaResponseWrapper;
+import it.reply.utils.json.JsonUtility;
 import it.reply.utils.web.ws.rest.apiencoding.NoMappingModelFoundException;
 import it.reply.utils.web.ws.rest.apiencoding.RestMessage;
 import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
 import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generic Rest Decode strategy for Prisma Rest Protocol.
@@ -26,89 +29,49 @@ import it.reply.utils.web.ws.rest.apiencoding.decode.RestResponseDecodeStrategy;
  * 
  */
 public class PrismaRRDStrategy<APIResponseType> implements
-		RestResponseDecodeStrategy {
+		RestResponseDecodeStrategy<String> {
 
-	private JavaType targetClass;
+  private static final Logger LOG = LoggerFactory.getLogger(PrismaRRDStrategy.class);
+  
+  private TypeToken<APIResponseType> type;
 
-	/**
-	 * Constructor for a provided target class type descriptor.
-	 * 
-	 * @param targetClass
-	 *            the {@link JavaType} mapping class descriptor.
-	 */
-	public PrismaRRDStrategy(JavaType targetClass) {		
-		this.targetClass = targetClass;
+  protected TypeToken<APIResponseType> getType() {
+    return type;
+  }
+  
+  public PrismaRRDStrategy(TypeToken<APIResponseType> genericType) {
+    type = genericType;
+  }
+  
+	@Override
+	public StatusType getStatus(RestMessage<String> msg)
+			throws NoMappingModelFoundException, ServerErrorResponseException {
+		return Status.fromStatusCode(msg.getHttpStatusCode());
 	}
 	
-	/**
-	 * Constructor for a single class type (not nested types ! Use the other
-	 * constructor instead, <code>PrismaRRDStrategy(Class... c)</code>).
-	 * 
-	 * @param c
-	 *            the mapping class.
-	 */
-	public PrismaRRDStrategy(Class<APIResponseType> c) {
-		ObjectMapper mapper = new ObjectMapper();
-		targetClass = mapper.getTypeFactory().constructType(c);
-	}
-
-	/**
-	 * Constructor for nested classes types (ie. List&lt;Set&lt;String&gt;&gt;).
-	 * 
-	 * @param c
-	 *            an array of nested classes. <br/>
-	 *            For example, to express the following:
-	 * 
-	 *            <code>
-	 * 				List&lt;Set&lt;String&gt;&gt;
-	 * 			  </code> </br>Use: <code>
-	 *            new PrismaRRDStrategy(List.class, Set.class, String.class)
-	 * 			  </code>
-	 */
-	public PrismaRRDStrategy(@SuppressWarnings("rawtypes") Class... c) {
-		if (c.length < 2)
-			throw new IllegalArgumentException(
-					"The array of nested classes must be at least of two items !");
-
-		int n = c.length;
-		TypeFactory tf = TypeFactory.defaultInstance();
-		targetClass = tf.constructParametricType(c[n - 2], c[n - 1]);
-		for (int i = n - 3; i >= 0; i--) {
-			targetClass = tf.constructParametricType(c[i], targetClass);
-		}
-
-	}
-
-	@Override
-	public JavaType getModelClass(RestMessage msg)
-			throws NoMappingModelFoundException, ServerErrorResponseException {
-		Pair<StatusType, JavaType> result = strategy(msg);
-		return result.getValue1();
-	}
-
-	@Override
-	public StatusType getStatus(RestMessage msg)
-			throws NoMappingModelFoundException, ServerErrorResponseException {
-		Pair<StatusType, JavaType> result = strategy(msg);
-		return result.getValue0();
-	}
-	
-	private Pair<StatusType, JavaType> strategy(RestMessage msg)
-			throws NoMappingModelFoundException, ServerErrorResponseException {
+  @Override
+  public JavaType getModelClass(RestMessage<String> msg)
+      throws NoMappingModelFoundException, ServerErrorResponseException {
 
 		JavaType clazz;
-		StatusType status = Status.fromStatusCode(msg.getHttpStatusCode());
 
-		if (msg.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE))
+		if (msg.getHeaders() != null && msg.getHeaders().containsKey(HttpHeaders.CONTENT_TYPE))
 		{
-			if (msg.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE)
-				.equals(MediaType.APPLICATION_JSON)) {
+		  String stringContentType = String.format("%s", msg.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
+		  MediaType contentType = null;
+		  try {
+		    contentType = MediaType.valueOf(stringContentType);
+		  } catch (Exception ex) {
+		    LOG.warn("Invalid content type " + stringContentType);
+		  }
+			if (MediaType.valueOf(MediaType.APPLICATION_JSON).isCompatible(contentType)) {
 				// ResponseWrapper
 				ObjectMapper mapper = new ObjectMapper();
 				clazz = mapper.getTypeFactory().constructParametricType(
-						PrismaResponseWrapper.class, targetClass);
+						PrismaResponseWrapper.class, JsonUtility.getJavaType(getType()));
 			} else {
 				// SERVER ERROR
+			  StatusType status = getStatus(msg);
 				throw new ServerErrorResponseException("SERVER_ERROR_RESPONSE",
 						null, msg, status.getStatusCode());
 			}
@@ -117,9 +80,9 @@ public class PrismaRRDStrategy<APIResponseType> implements
 		{
 			ObjectMapper mapper = new ObjectMapper();
 			clazz = mapper.getTypeFactory().constructParametricType(
-					PrismaResponseWrapper.class, targetClass);
+					PrismaResponseWrapper.class, JsonUtility.getJavaType(getType()));
 		}
 		
-		return new Pair<StatusType, JavaType>(status, clazz);
+		return clazz;
 	}
 }

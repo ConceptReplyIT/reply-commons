@@ -17,7 +17,7 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
  * @author l.biava
  * 
  */
-public interface RestResponseDecodeStrategy {
+public interface RestResponseDecodeStrategy<T> {
 	/**
 	 * @param msg
 	 *            The rest message.
@@ -29,7 +29,7 @@ public interface RestResponseDecodeStrategy {
 	 *             if the server responded with a custom error not using the
 	 *             application protocolo (ie. 404)
 	 */
-	public JavaType getModelClass(RestMessage msg)
+	public JavaType getModelClass(RestMessage<T> msg)
 			throws NoMappingModelFoundException, ServerErrorResponseException;
 
 	/**
@@ -42,6 +42,6 @@ public interface RestResponseDecodeStrategy {
 	 *             if the server responded with a custom error not using the
 	 *             application protocolo (ie. 404)
 	 */
-	public StatusType getStatus(RestMessage msg)
+	public StatusType getStatus(RestMessage<T> msg)
 			throws NoMappingModelFoundException, ServerErrorResponseException;
 }

@@ -2,8 +2,8 @@ package it.reply.utils.misc.polling;
 
 import java.util.concurrent.TimeoutException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A poller cycle implementation.
@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Poller<PARAMS_TYPE, RESULT_TYPE> {
 
-	protected static Logger LOG = LogManager.getLogger(Poller.class);
+	protected static Logger LOG = LoggerFactory.getLogger(Poller.class);
 	private static final String TAG = "[POLLER] ";
 
 	private PollingBehaviour<PARAMS_TYPE, RESULT_TYPE> pollBehaviour;

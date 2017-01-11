@@ -3,8 +3,8 @@ package it.reply.utils.misc.polling;
 import java.io.Serializable;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A poller implementation controlled externally by invoking a single poll cycle at a time. This
@@ -22,7 +22,7 @@ public class ExternallyControlledPoller<PARAMS_TYPE, RESULT_TYPE> implements Ser
 
   private static final long serialVersionUID = -9095947171133859249L;
 
-  protected static final Logger LOG = LogManager.getLogger(ExternallyControlledPoller.class);
+  protected static final Logger LOG = LoggerFactory.getLogger(ExternallyControlledPoller.class);
   private static final String TAG = "[POLLER] ";
 
   private PollingBehaviour<PARAMS_TYPE, RESULT_TYPE> pollBehaviour;

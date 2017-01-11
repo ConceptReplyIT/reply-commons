@@ -27,6 +27,12 @@ import it.reply.utils.web.ws.rest.apiencoding.ServerErrorResponseException;
  */
 public interface RestResponseDecoder<RestResponseResult extends BaseRestResponseResult<R, E>, R, E> {
 
+  /**
+   * Returns the response class that this decoder is able to decode
+   * @return the decodable class
+   */
+  public Class<E> getDecodableClass();
+  
 	/**
 	 * Decodes the given Rest Message body from JSON to a specific Mapping Class
 	 * given by the decoding strategy (or the default strategy in the decoder
@@ -53,7 +59,7 @@ public interface RestResponseDecoder<RestResponseResult extends BaseRestResponse
 	 *             if a mapping exception has occurred (ie Jackson Json parsing
 	 *             exception)
 	 */
-	public RestResponseResult decode(RestMessage<E> msg, RestResponseDecodeStrategy strategy)
+	public RestResponseResult decode(RestMessage<E> msg, RestResponseDecodeStrategy<E> strategy)
 			throws NoMappingModelFoundException, MappingException,
 			ServerErrorResponseException;
 

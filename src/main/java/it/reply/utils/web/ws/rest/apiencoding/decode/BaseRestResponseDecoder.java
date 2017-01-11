@@ -19,33 +19,37 @@ import javax.ws.rs.core.MediaType;
  * 
  */
 public abstract class BaseRestResponseDecoder<RestResponseResult extends BaseRestResponseResult<R, String>, R> implements
-		RestResponseDecoder<BaseRestResponseResult<R, String>, R, String> {
+		RestResponseDecoder<RestResponseResult, R, String> {
 
   private static Logger LOG = LoggerFactory.getLogger(BaseRestResponseDecoder.class);
   
-	protected RestResponseDecodeStrategy defaultDecodeStrategy;
+	protected RestResponseDecodeStrategy<String> defaultDecodeStrategy;
 
 	public BaseRestResponseDecoder() {
 		super();
 	}
 
 	public BaseRestResponseDecoder(
-			RestResponseDecodeStrategy defaultDecodeStrategy) {
+			RestResponseDecodeStrategy<String> defaultDecodeStrategy) {
 		this.defaultDecodeStrategy = defaultDecodeStrategy;
 	}
 
-	public RestResponseDecodeStrategy getDefaultDecodeStrategy() {
+	public RestResponseDecodeStrategy<String> getDefaultDecodeStrategy() {
 		return defaultDecodeStrategy;
 	}
 
 	public void setDefaultDecodeStrategy(
-			RestResponseDecodeStrategy defaultDecodeStrategy) {
+			RestResponseDecodeStrategy<String> defaultDecodeStrategy) {
 		this.defaultDecodeStrategy = defaultDecodeStrategy;
 	}
 
 	 protected void checkMediaType(RestMessage<String> msg) throws MappingException {
 	    boolean hasMediatypeJson = false;
 	    List<Object> mediaTypes = null;
+	    
+	    if (msg.getBody() == null) {
+	      return;
+	    }
 	    
 	    if (msg.getHeaders() != null) {
 	      mediaTypes = msg.getHeaders().get(HttpHeaders.CONTENT_TYPE);
@@ -55,7 +59,15 @@ public abstract class BaseRestResponseDecoder<RestResponseResult extends BaseRes
 	        LOG.warn("Multiple MediaTypes found in HTTP response: {}", mediaTypes);
 	      }
 	      for (Object mediaType : mediaTypes) {
-	        if (mediaType != null && mediaType.toString().contains(MediaType.APPLICATION_JSON)) {
+	        String stringContentType = String.format("%s", mediaType);
+	        MediaType contentType = null;
+	        try {
+	          contentType = MediaType.valueOf(stringContentType);
+	        } catch (Exception ex) {
+	          LOG.warn("Invalid content type " + stringContentType);
+	          continue;
+	        }
+	        if (MediaType.valueOf(MediaType.APPLICATION_JSON).isCompatible(contentType)) {
 	          hasMediatypeJson = true;
 	          break;
 	        }
@@ -64,5 +76,10 @@ public abstract class BaseRestResponseDecoder<RestResponseResult extends BaseRes
 	    if (!hasMediatypeJson) {
 	      throw new MappingException("Not JSON encoded body.", null, msg);
 	    }
+	  }
+	 
+	  @Override
+	  public Class<String> getDecodableClass() {
+	    return String.class;
 	  }
 }
